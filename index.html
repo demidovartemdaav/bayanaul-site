@@ -8,10 +8,10 @@
 <meta name="theme-color" content="#060A0D">
 <meta property="og:title" content="Туры в Баянаул из Павлодара — в которых уже всё продумано">
 <meta property="og:description" content="Горы, озёра Жасыбай и Торайгыр, сакральные места, пещеры и скалы. Места, эмоции и новые друзья.">
-<meta property="og:image" content="img/hero.jpg">
+<meta property="og:image" content="img/hero.webp">
 <meta property="og:type" content="website">
-<link rel="icon" href="img/logo.png" type="image/png">
-<link rel="apple-touch-icon" href="img/logo.png">
+<link rel="icon" href="img/logo.webp" type="image/webp">
+<link rel="apple-touch-icon" href="img/logo.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
@@ -167,7 +167,7 @@ tailwind.config = {
   <div class="mx-auto w-full max-w-7xl px-4 sm:px-6">
     <div class="flex h-16 items-center justify-between gap-2 md:h-20">
       <a href="#hero" class="flex min-w-0 items-center gap-2.5">
-        <img src="img/logo.png" alt="Логотип Баянаул Отдых" class="h-10 w-10 shrink-0 rounded-full object-cover shadow-lg ring-1 ring-white/15"
+        <img src="img/logo.webp" alt="Логотип Баянаул Отдых" class="h-10 w-10 shrink-0 rounded-full object-cover shadow-lg ring-1 ring-white/15"
              onerror="this.style.display='none';document.getElementById('logoFallback').style.display='flex'">
         <span id="logoFallback" style="display:none" class="h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-gold to-brand shadow-lg">
           <svg class="h-6 w-6 text-night" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><use href="#i-mtn"/></svg>
@@ -193,7 +193,7 @@ tailwind.config = {
 <div id="mobileMenu" class="fixed inset-0 z-[70] hidden flex-col bg-night/95 backdrop-blur-xl lg:hidden">
   <div class="flex h-16 items-center justify-between px-4 sm:px-6">
     <span class="flex items-center gap-2.5">
-      <img src="img/logo.png" alt="Логотип Баянаул Отдых" class="h-9 w-9 rounded-full object-cover ring-1 ring-white/15"
+      <img src="img/logo.webp" alt="Логотип Баянаул Отдых" class="h-9 w-9 rounded-full object-cover ring-1 ring-white/15"
            onerror="this.style.display='none';document.getElementById('logoFallbackMenu').style.display='flex'">
       <span id="logoFallbackMenu" style="display:none" class="h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-gold to-brand">
         <svg class="h-5 w-5 text-night" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><use href="#i-mtn"/></svg>
@@ -224,7 +224,7 @@ tailwind.config = {
 <main>
 <!-- ================= БЛОК 2: ГЛАВНЫЙ ЭКРАН ================= -->
 <section id="hero" class="relative flex min-h-[100svh] items-center overflow-hidden">
-  <!-- Подложка-иллюстрация: видна, пока грузится hero.jpg (или если фото не добавлено) -->
+  <!-- Подложка-иллюстрация: видна, пока грузится hero.webp (или если фото не добавлено) -->
   <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -268,7 +268,7 @@ tailwind.config = {
   </svg>
 
   <!-- Фоновое фото hero: плавно проявляется после загрузки -->
-  <img src="img/hero.jpg" alt="" aria-hidden="true" fetchpriority="high" decoding="async"
+  <img src="img/hero.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async"
        onload="this.style.opacity='1'"
        class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700" style="opacity:0">
 
@@ -757,7 +757,7 @@ tailwind.config = {
   <div class="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
     <div>
       <a href="#hero" class="flex items-center gap-3">
-        <img src="img/logo.png" alt="Логотип Баянаул Отдых" class="h-10 w-10 rounded-full object-cover ring-1 ring-white/15"
+        <img src="img/logo.webp" alt="Логотип Баянаул Отдых" class="h-10 w-10 rounded-full object-cover ring-1 ring-white/15"
              onerror="this.style.display='none';document.getElementById('logoFallbackFooter').style.display='flex'">
         <span id="logoFallbackFooter" style="display:none" class="h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-gold to-brand">
           <svg class="h-6 w-6 text-night" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><use href="#i-mtn"/></svg>
