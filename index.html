@@ -48,6 +48,7 @@ tailwind.config = {
 <style>
   html{scroll-behavior:smooth}
   body{font-size:16px;line-height:1.6}
+  p{text-wrap:pretty}
   section[id]{scroll-margin-top:84px}
   ::selection{background:#FB6F0A;color:#060A0D}
   ::-webkit-scrollbar{width:10px}
@@ -974,6 +975,31 @@ const cio = new IntersectionObserver(entries => {
   });
 }, { threshold: .5 });
 document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
+</script>
+
+<!-- Типографика: предлоги/союзы не заканчивают строки, суммы не разрываются -->
+<script>
+(function () {
+  const NBSP = '\u00A0';
+  const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'PRE']);
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const p = node.parentElement;
+      if (!p || SKIP.has(p.tagName)) return NodeFilter.FILTER_REJECT;
+      return /(^|\s)[а-яё]{1,2}\s/i.test(node.nodeValue) || /\d\s\d/.test(node.nodeValue)
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_REJECT;
+    }
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  nodes.forEach(n => {
+    n.nodeValue = n.nodeValue
+      .replace(/(^|\s)([а-яё]{1,2})\s(?=\S)/gi, '$1$2' + NBSP)   /* «в Баянаул» -> «в␣Баянаул» */
+      .replace(/(\d)\s(?=\d{3}\b)/g, '$1' + NBSP)                /* «16 000» не разрывается */
+      .replace(/(\d)\s(?=₸)/g, '$1' + NBSP);                     /* «000 ₸» не разрывается */
+  });
+})();
 </script>
 </body>
 </html>
