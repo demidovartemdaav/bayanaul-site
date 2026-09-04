@@ -10,8 +10,10 @@
 <meta property="og:description" content="Горы, озёра Жасыбай и Торайгыр, сакральные места, пещеры и скалы. Места, эмоции и новые друзья.">
 <meta property="og:image" content="img/hero.jpg">
 <meta property="og:type" content="website">
-<link rel="icon" href="img/logo.png" type="image/png" sizes="any">
-<link rel="shortcut icon" href="img/logo.png" type="image/png">
+<!-- Favicon: встроенный SVG (не зависит от файлов) + PNG как запасной -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FB6F0A'/%3E%3Ccircle cx='45' cy='17' r='6' fill='%23FDD604'/%3E%3Cpath d='M8 49 L23 25 L33 39 L41 28 L56 49 Z' fill='%23FDFCFC'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="any" href="img/logo.png">
+<link rel="shortcut icon" href="img/logo.png">
 <link rel="apple-touch-icon" href="img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -66,9 +68,10 @@ tailwind.config = {
   .btn-wrap{white-space:normal;line-height:1.35;text-align:center}
   .btn-primary{background:linear-gradient(135deg,#FDAF03,#FB6F0A);color:#1A0E02;box-shadow:0 12px 32px -12px rgba(251,111,10,.65)}
   .btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 42px -12px rgba(251,111,10,.75)}
-  .btn-wa{background:#32A722;color:#04240F;box-shadow:0 12px 32px -12px rgba(50,167,34,.5)}
-  .btn-wa:hover{transform:translateY(-2px);background:#28911C}
-  .btn-outline{border:1px solid #334155;background:rgba(30,41,59,.55);color:#FDFCFC}
+  /* background-color (не shorthand), чтобы не затирать слой блика на .header-cta */
+  .btn-wa{background-color:#32A722;color:#04240F;box-shadow:0 12px 32px -12px rgba(50,167,34,.5)}
+  .btn-wa:hover{transform:translateY(-2px);background-color:#28911C}
+  .btn-outline{border:1px solid #334155;background-color:rgba(30,41,59,.55);color:#FDFCFC}
   .btn-outline:hover{border-color:rgba(251,111,10,.6);color:#FDD604;transform:translateY(-2px)}
 
   /* ===== ФИКС ШАПКИ ДЛЯ МОБИЛЬНЫХ ===== */
@@ -76,6 +79,27 @@ tailwind.config = {
   .header-cta { display: none !important; }
   @media (min-width: 640px) {
     .header-cta { display: inline-flex !important; }
+
+    /* Бегущий блик: второй слой фона едет по кнопке.
+       Без пульса и без overflow — фон сам обрезан по скруглению. */
+    .header-cta{
+      background-image:
+        linear-gradient(115deg,
+          rgba(255,255,255,0) 30%,
+          rgba(255,255,255,.45) 45%,
+          rgba(255,255,255,.8) 50%,
+          rgba(255,255,255,.45) 55%,
+          rgba(255,255,255,0) 70%),
+        linear-gradient(135deg,#FDAF03,#FB6F0A);
+      background-repeat:no-repeat;
+      background-size:280% 100%, 100% 100%;
+      background-position:0% 0, 0 0;
+      animation:ctaSheen 3.6s ease-in-out infinite;
+    }
+  }
+  @keyframes ctaSheen{
+    0%        {background-position:0% 0, 0 0}
+    55%,100%  {background-position:100% 0, 0 0}
   }
 
   /* ===== Плавающая кнопка WhatsApp (с пульсацией) ===== */
@@ -166,6 +190,7 @@ tailwind.config = {
     .js .reveal,.js .bullet,.js .cta-anim,.js .stat{opacity:1;transform:none;transition:none}
     .js .card-cta{opacity:1;transform:none;animation:none}
     .js .stars .st{opacity:1;transform:none;animation:none}
+    .header-cta{animation:none}
     .pulse-wa{animation:none}
     .star,.anim{animation:none}
   }
