@@ -183,7 +183,10 @@ tailwind.config = {
     }
   }
 
-  /* ===== Блок с прозрачным WebP + полароид в правой части hero ===== */
+  /* ===== Блок с прозрачной сценой + полароид в правой части hero =====
+     Живёт внутри контентной колонки (max-w-7xl + px-6),
+     right:1.5rem = тот же отступ, что у кнопок и буллетов.
+     Показывается только от 1280px. */
   .hero-media{display:none}
   @media (min-width:1280px){
     .hero-media{
@@ -203,6 +206,7 @@ tailwind.config = {
     from{opacity:0; margin-top:26px}
     to  {opacity:1; margin-top:0}
   }
+  /* сцена: PNG/WebP на прозрачном фоне, целиком, без обрезки */
   .hero-media .scene-img{
     position:absolute; inset:0;
     width:100%; height:100%;
@@ -435,12 +439,11 @@ tailwind.config = {
 
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
 
-    <!-- ===== Прозрачный WebP-блок + полароид: внутри контентной колонки,
-         правый край = правый край буллетов/кнопок. Фон блока пустой,
-         сцена (hero-side.webp) показывается целиком, без обрезки. ===== -->
+    <!-- ===== Сцена + полароид: только от 1280px, внутри контентной колонки.
+         Сцена пробует hero-side.webp, при ошибке — hero-side.png. ===== -->
     <div class="hero-media" aria-hidden="true">
       <img class="scene-img" src="img/hero-side.webp" alt="" loading="lazy" decoding="async"
-           onerror="this.classList.add('hide')">
+           onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='img/hero-side.png';}else{this.classList.add('hide');}">
 
       <div class="polaroid-holder">
         <div class="polaroid">
