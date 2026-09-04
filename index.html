@@ -10,7 +10,8 @@
 <meta property="og:description" content="Горы, озёра Жасыбай и Торайгыр, сакральные места, пещеры и скалы. Места, эмоции и новые друзья.">
 <meta property="og:image" content="img/hero.jpg">
 <meta property="og:type" content="website">
-<link rel="icon" href="img/logo.png" type="image/png">
+<link rel="icon" href="img/logo.png" type="image/png" sizes="any">
+<link rel="shortcut icon" href="img/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="img/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,13 +71,6 @@ tailwind.config = {
   .btn-outline{border:1px solid #334155;background:rgba(30,41,59,.55);color:#FDFCFC}
   .btn-outline:hover{border-color:rgba(251,111,10,.6);color:#FDD604;transform:translateY(-2px)}
 
-  /* ===== Медленная постоянная пульсация CTA в шапке ===== */
-  .header-cta{animation:headerGlow 2.6s ease-in-out infinite}
-  @keyframes headerGlow{
-    0%,100%{box-shadow:0 0 0 0 rgba(251,111,10,0),0 10px 24px -12px rgba(50,167,34,.45);transform:scale(1)}
-    50%{box-shadow:0 0 0 8px rgba(251,111,10,.12),0 10px 30px -8px rgba(50,167,34,.65);transform:scale(1.045)}
-  }
-
   /* ===== ФИКС ШАПКИ ДЛЯ МОБИЛЬНЫХ ===== */
   html, body { overflow-x: hidden; }
   .header-cta { display: none !important; }
@@ -84,7 +78,7 @@ tailwind.config = {
     .header-cta { display: inline-flex !important; }
   }
 
-  /* ===== Плавающая кнопка WhatsApp ===== */
+  /* ===== Плавающая кнопка WhatsApp (с пульсацией) ===== */
   .fab-wa{
     position: fixed;
     top: auto;
@@ -106,6 +100,9 @@ tailwind.config = {
   }
   .fab-wa:hover{transform:scale(1.06)}
 
+  .pulse-wa{animation:pulseRing 2.2s cubic-bezier(.4,0,.6,1) infinite}
+  @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(50,167,34,.45)}70%{box-shadow:0 0 0 18px rgba(50,167,34,0)}100%{box-shadow:0 0 0 0 rgba(50,167,34,0)}}
+
   .chip{display:inline-flex;align-items:center;gap:.45rem;border-radius:9999px;padding:.42rem .95rem;font-size:.8125rem;font-weight:600;line-height:1}
   .chip-amber{background:rgba(253,175,3,.12);color:#FDAF03;border:1px solid rgba(253,175,3,.35)}
   .chip-green{background:rgba(50,167,34,.12);color:#A3F430;border:1px solid rgba(50,167,34,.4)}
@@ -122,13 +119,10 @@ tailwind.config = {
   /* ===== Система scroll-анимаций ===== */
   .js .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
   .js .reveal.in{opacity:1;transform:none}
-  /* буллеты hero: каскад слева направо */
   .js .bullet{opacity:0;transform:translateX(-22px);transition:opacity .55s ease,transform .55s cubic-bezier(.22,.9,.35,1.1)}
   .js .bullet.in{opacity:1;transform:none}
-  /* кнопки hero: короткий подъём */
   .js .cta-anim{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s cubic-bezier(.22,.9,.35,1.15)}
   .js .cta-anim.in{opacity:1;transform:none}
-  /* кнопки внутри карточек: пружинный pop */
   .js .card-cta{opacity:0;transform:scale(.85)}
   .js .in .card-cta{animation:ctaPop .5s cubic-bezier(.3,1.4,.4,1) .35s both}
   @keyframes ctaPop{
@@ -136,7 +130,6 @@ tailwind.config = {
     65%{opacity:1;transform:scale(1.06)}
     100%{opacity:1;transform:scale(1)}
   }
-  /* звёзды отзывов: пропульсируют по очереди */
   .js .stars .st{opacity:0;transform:scale(0)}
   .js .stars.in .st{animation:starPop .45s cubic-bezier(.3,1.6,.4,1) both}
   .js .stars.in .st:nth-child(1){animation-delay:.05s}
@@ -149,7 +142,6 @@ tailwind.config = {
     70%{opacity:1;transform:scale(1.3) rotate(8deg)}
     100%{opacity:1;transform:scale(1) rotate(0)}
   }
-  /* цифры-счётчики: пульс при появлении */
   .js .stat{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
   .js .stat.in{opacity:1;transform:none}
   .js .stat.in .stat-num{animation:statPulse .7s ease .5s}
@@ -157,12 +149,24 @@ tailwind.config = {
 
   .star-ico{width:1rem;height:1rem}
 
+  /* ===== Градиентный текст (inline — без обрезки и с рабочим nbsp) ===== */
+  .text-gradient{color:#FB6F0A}
+  @supports ((-webkit-background-clip:text) or (background-clip:text)){
+    .text-gradient{
+      background:linear-gradient(92deg,#FDD604 0%,#FDAF03 55%,#FB6F0A 100%);
+      -webkit-background-clip:text;
+      background-clip:text;
+      -webkit-text-fill-color:transparent;
+      color:transparent;
+    }
+  }
+
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     .js .reveal,.js .bullet,.js .cta-anim,.js .stat{opacity:1;transform:none;transition:none}
     .js .card-cta{opacity:1;transform:none;animation:none}
     .js .stars .st{opacity:1;transform:none;animation:none}
-    .header-cta{animation:none}
+    .pulse-wa{animation:none}
     .star,.anim{animation:none}
   }
 </style>
@@ -317,7 +321,7 @@ tailwind.config = {
         <svg class="ico h-4 w-4"><use href="#i-sun"/></svg>Сезон «Золотая осень» — расписание открыто
       </span>
       <h1 class="mt-6 font-display text-4xl font-extrabold leading-[1.14] text-ink sm:text-5xl lg:text-[3.4rem]">
-        Путешествия и туры в <span class="text-gradient">&nbsp;Баянаул</span> из Павлодара, в которых уже всё продумано
+        Путешествия и туры в&nbsp;<span class="text-gradient">Баянаул</span> из Павлодара, в которых уже всё продумано
       </h1>
       <p class="mt-6 max-w-2xl text-lg leading-relaxed text-slate-300">
         Однодневные и двухдневные туры выходного дня: горы, озёра Жасыбай и Торайгыр, сакральные места, пещеры и скалы. Места, эмоции и новые друзья 🌿
@@ -343,7 +347,7 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- кнопки hero: короткая анимация по скроллу -->
+      <!-- кнопки hero -->
       <div class="mt-10 flex flex-wrap gap-4">
         <a href="#afisha" class="btn btn-primary cta-anim">Смотреть афишу туров<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></a>
         <a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener" class="btn btn-outline cta-anim" style="transition-delay:.12s">
@@ -883,9 +887,9 @@ tailwind.config = {
   </div>
 </footer>
 
-<!-- Плавающая кнопка WhatsApp -->
+<!-- Плавающая кнопка WhatsApp (с пульсацией) -->
 <a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener"
-   class="fab-wa" aria-label="Написать в WhatsApp">
+   class="fab-wa pulse-wa" aria-label="Написать в WhatsApp">
   <svg class="ico-f h-7 w-7"><use href="#i-wa"/></svg>
 </a>
 
@@ -985,9 +989,7 @@ function closeBooking() {
 modal.querySelector('[data-modal-backdrop]').addEventListener('click', closeBooking);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeBooking(); closeMenu(); } });
 
-/* ===== Scroll-анимации: reveal + каскады ===== */
-const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+/* ===== Scroll-анимации ===== */
 const io = new IntersectionObserver(entries => {
   entries.forEach(en => {
     if (!en.isIntersecting) return;
@@ -1019,27 +1021,40 @@ const cio = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
 </script>
 
-<!-- Типографика: предлоги/союзы не заканчивают строки, суммы не разрываются -->
+<!-- Типографика: предлоги не заканчивают строки (в т.ч. перед тегами), суммы не разрываются -->
 <script>
 (function () {
   const NBSP = '\u00A0';
-  const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'PRE']);
+  const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'PRE', 'BR']);
+  const isEl = n => n && n.nodeType === 1 && !SKIP.has(n.tagName);
+
   const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
     acceptNode(node) {
       const p = node.parentElement;
       if (!p || SKIP.has(p.tagName)) return NodeFilter.FILTER_REJECT;
-      return /(^|\s)[а-яё]{1,2}\s/i.test(node.nodeValue) || /\d\s\d/.test(node.nodeValue)
+      const v = node.nodeValue;
+      return (/(^|\s)[а-яё]{1,2}\s/i.test(v) || /\d\s\d/.test(v) || /(^|\s)[а-яё]{1,2}\s$/i.test(v))
         ? NodeFilter.FILTER_ACCEPT
         : NodeFilter.FILTER_REJECT;
     }
   });
   const nodes = [];
   while (walker.nextNode()) nodes.push(walker.currentNode);
+
   nodes.forEach(n => {
-    n.nodeValue = n.nodeValue
+    let v = n.nodeValue
       .replace(/(^|\s)([а-яё]{1,2})\s(?=\S)/gi, '$1$2' + NBSP)
       .replace(/(\d)\s(?=\d{3}\b)/g, '$1' + NBSP)
       .replace(/(\d)\s(?=₸)/g, '$1' + NBSP);
+    n.nodeValue = v;
+
+    const m = v.match(/(^|\s)([а-яё]{1,2})\s$/);
+    if (m && isEl(n.nextSibling)) {
+      const first = (n.nextSibling.textContent || '').replace(/^\s+/, '');
+      if (first.length > 0 && /[а-яёa-z0-9«]/i.test(first[0])) {
+        n.nodeValue = v.replace(/\s$/, NBSP);
+      }
+    }
   });
 })();
 </script>
