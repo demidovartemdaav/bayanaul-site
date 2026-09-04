@@ -183,10 +183,7 @@ tailwind.config = {
     }
   }
 
-  /* ===== Блок с прозрачной сценой + полароид в правой части hero =====
-     Живёт внутри контентной колонки (max-w-7xl + px-6),
-     right:1.5rem = тот же отступ, что у кнопок и буллетов.
-     Показывается только от 1280px. */
+  /* ===== Десктоп: сцена (прозрачный WebP) + полароид в правой части hero ===== */
   .hero-media{display:none}
   @media (min-width:1280px){
     .hero-media{
@@ -206,12 +203,14 @@ tailwind.config = {
     from{opacity:0; margin-top:26px}
     to  {opacity:1; margin-top:0}
   }
-  /* сцена: PNG/WebP на прозрачном фоне, целиком, без обрезки */
   .hero-media .scene-img{
     position:absolute; inset:0;
     width:100%; height:100%;
     object-fit:contain;
-    object-position:center bottom;
+    object-position:center 5%;
+    filter:
+      drop-shadow(0 16px 28px rgba(0,0,0,.55))
+      drop-shadow(0 0 55px rgba(251,111,10,.28));
   }
   .hero-media .scene-img.hide{display:none}
   .hero-media .polaroid-holder{
@@ -273,9 +272,31 @@ tailwind.config = {
     color:#6B7280; letter-spacing:.02em; transform:rotate(-1.5deg);
   }
 
-  /* мобильный полароид: под буллетами (виден до 1280px) */
-  .pola-mobile{margin-top:2rem}
-  .pola-mobile .polaroid{width:min(340px, 78vw); margin-inline:auto}
+  /* ===== Мобильная композиция: сцена за полароидом через ::before ===== */
+  .pola-mobile{
+    position:relative;
+    margin-top:2.5rem;
+    padding-bottom:15%;
+  }
+  .pola-mobile .polaroid{
+    position:relative;
+    z-index:2;
+    width:min(425px,88vw);
+    margin-inline:auto;
+    transform:translateY(14%);
+  }
+  .pola-mobile::before{
+    content:'';
+    position:absolute;
+    left:50%;
+    bottom:9%;
+    transform:translateX(-50%);
+    width:115%;
+    aspect-ratio:3/4;
+    background:url('img/hero-side.webp') center bottom / contain no-repeat;
+    pointer-events:none;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.55)) drop-shadow(0 0 55px rgba(251,111,10,.28));
+  }
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
@@ -290,8 +311,56 @@ tailwind.config = {
     .polaroid .win img:nth-child(n+2){opacity:0}
     .polaroid{transform:rotate(-4deg)}
     .hero-media .polaroid-holder{transform:rotate(-4deg)}
+    .pola-mobile::before{filter:none}
   }
-</style>
+    /* Мобильная сцена за полароидом: размеры в vw — детерминированно */
+  .pola-mobile{position:relative;margin-top:4rem;padding-bottom:6%}
+  .pola-mobile::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:96vw;
+    height:100vw;
+    background:url('img/hero-side.webp') center bottom / contain no-repeat;
+    pointer-events:none;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.55)) drop-shadow(0 0 55px rgba(251,111,10,.28));
+  }
+  .pola-mobile .polaroid{
+    position:relative;
+    z-index:2;
+    width:min(425px,88vw);
+    margin:62vw auto 0;
+    transform:rotate(-4deg);
+  }
+  /* Мобильная сцена: зеркало десктопной композиции */
+  .pola-mobile{
+    position:relative;
+    width:min(425px,88vw);
+    margin:3rem auto 5.5rem;
+    aspect-ratio:3/4;
+    padding:0;
+  }
+  .pola-mobile::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    transform:none;
+    background:url('img/hero-side.webp') center 5% / contain no-repeat;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.55)) drop-shadow(0 0 55px rgba(251,111,10,.28));
+  }
+  .pola-mobile .polaroid{
+    position:absolute;
+    left:50%;
+    bottom:-7%;
+    width:85%;
+    margin:0;
+    transform:translateX(-50%) rotate(-4deg);
+    z-index:2;
+  }</style>
 </head>
 <body class="bg-night font-body text-slate-400 antialiased">
 
@@ -439,8 +508,7 @@ tailwind.config = {
 
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
 
-    <!-- ===== Сцена + полароид: только от 1280px, внутри контентной колонки.
-         Сцена пробует hero-side.webp, при ошибке — hero-side.png. ===== -->
+    <!-- ===== Десктоп (от 1280px): сцена + полароид поверх, вписано в контентную колонку ===== -->
     <div class="hero-media" aria-hidden="true">
       <img class="scene-img" src="img/hero-side.webp" alt="" loading="lazy" decoding="async"
            onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='img/hero-side.png';}else{this.classList.add('hide');}">
@@ -448,7 +516,6 @@ tailwind.config = {
       <div class="polaroid-holder">
         <div class="polaroid">
           <div class="win">
-            <!-- 7 кадров WebP: p1.webp ... p7.webp (~4:3) -->
             <img src="img/p1.webp" alt="" loading="lazy" decoding="async">
             <img src="img/p2.webp" alt="" loading="lazy" decoding="async">
             <img src="img/p3.webp" alt="" loading="lazy" decoding="async">
@@ -493,7 +560,7 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- ===== Полароид-слайдер до 1280px: под буллетами ===== -->
+      <!-- ===== Мобильная композиция (до 1280px): сцена за полароидом через ::before ===== -->
       <div class="pola-mobile xl:hidden">
         <div class="polaroid">
           <div class="win">
