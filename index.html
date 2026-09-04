@@ -183,9 +183,7 @@ tailwind.config = {
     }
   }
 
-  /* ===== Блок с прозрачным PNG + полароид в правой части hero =====
-     Блок живёт внутри контентной колонки (max-w-7xl + px-6).
-     Фон блока ПУСТОЙ: PNG лежит целиком, без обрезки. */
+  /* ===== Блок с прозрачным WebP + полароид в правой части hero ===== */
   .hero-media{display:none}
   @media (min-width:1280px){
     .hero-media{
@@ -205,11 +203,10 @@ tailwind.config = {
     from{opacity:0; margin-top:26px}
     to  {opacity:1; margin-top:0}
   }
-  /* картинка-сцена: целиком, без object-fit и без overflow */
   .hero-media .scene-img{
     position:absolute; inset:0;
     width:100%; height:100%;
-    object-fit:contain;      /* png никогда не обрезается */
+    object-fit:contain;
     object-position:center bottom;
   }
   .hero-media .scene-img.hide{display:none}
@@ -221,7 +218,7 @@ tailwind.config = {
     filter:drop-shadow(0 26px 34px rgba(0,0,0,.55));
   }
 
-  /* ===== Полароид (углы чёткие, кадр 4:3, 7 кадров PNG) ===== */
+  /* ===== Полароид (углы чёткие, 7 кадров WebP) ===== */
   .polaroid{
     position:relative;
     width:100%;
@@ -253,7 +250,6 @@ tailwind.config = {
     opacity:0;
     animation:shotCycle calc(var(--shot) * var(--shots)) linear infinite;
   }
-  /* общий кейфрейм-цикл; каждому кадру — своя доля таймлайна через переменную */
   .polaroid .win img:nth-child(1){animation-delay:calc(var(--shot) * 0)}
   .polaroid .win img:nth-child(2){animation-delay:calc(var(--shot) * 1)}
   .polaroid .win img:nth-child(3){animation-delay:calc(var(--shot) * 2)}
@@ -439,25 +435,24 @@ tailwind.config = {
 
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
 
-    <!-- ===== Прозрачный PNG-блок + полароид: внутри контентной колонки,
-         правый край = правый край буллетов/кнопок (right:1.5rem).
-         Фон блока пустой: hero-side.png лежит целиком, без обрезки. ===== -->
+    <!-- ===== Прозрачный WebP-блок + полароид: внутри контентной колонки,
+         правый край = правый край буллетов/кнопок. Фон блока пустой,
+         сцена (hero-side.webp) показывается целиком, без обрезки. ===== -->
     <div class="hero-media" aria-hidden="true">
-      <!-- Сцена: PNG на прозрачном фоне, показывается целиком -->
-      <img class="scene-img" src="img/hero-side.png" alt="" loading="lazy" decoding="async"
+      <img class="scene-img" src="img/hero-side.webp" alt="" loading="lazy" decoding="async"
            onerror="this.classList.add('hide')">
 
       <div class="polaroid-holder">
         <div class="polaroid">
           <div class="win">
-            <!-- 7 кадров PNG: p1.png ... p7.png (каждый ~4:3) -->
-            <img src="img/p1.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p2.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p3.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p4.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p5.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p6.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p7.png" alt="" loading="lazy" decoding="async">
+            <!-- 7 кадров WebP: p1.webp ... p7.webp (~4:3) -->
+            <img src="img/p1.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p2.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p3.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p4.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p5.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p6.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p7.webp" alt="" loading="lazy" decoding="async">
           </div>
           <div class="pola-bottom"><span class="hand">@bayanaulotdyh.kz</span></div>
         </div>
@@ -499,13 +494,13 @@ tailwind.config = {
       <div class="pola-mobile xl:hidden">
         <div class="polaroid">
           <div class="win">
-            <img src="img/p1.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p2.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p3.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p4.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p5.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p6.png" alt="" loading="lazy" decoding="async">
-            <img src="img/p7.png" alt="" loading="lazy" decoding="async">
+            <img src="img/p1.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p2.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p3.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p4.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p5.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p6.webp" alt="" loading="lazy" decoding="async">
+            <img src="img/p7.webp" alt="" loading="lazy" decoding="async">
           </div>
           <div class="pola-bottom"><span class="hand">@bayanaulotdyh.kz</span></div>
         </div>
