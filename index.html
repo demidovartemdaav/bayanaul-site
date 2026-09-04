@@ -10,7 +10,6 @@
 <meta property="og:description" content="Горы, озёра Жасыбай и Торайгыр, сакральные места, пещеры и скалы. Места, эмоции и новые друзья.">
 <meta property="og:image" content="img/hero.jpg">
 <meta property="og:type" content="website">
-<!-- Favicon: встроенный SVG (не зависит от файлов) + PNG как запасной -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23FB6F0A'/%3E%3Ccircle cx='45' cy='17' r='6' fill='%23FDD604'/%3E%3Cpath d='M8 49 L23 25 L33 39 L41 28 L56 49 Z' fill='%23FDFCFC'/%3E%3C/svg%3E">
 <link rel="icon" type="image/png" sizes="any" href="img/logo.png">
 <link rel="shortcut icon" href="img/logo.png">
@@ -18,6 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
 tailwind.config = {
@@ -40,6 +40,7 @@ tailwind.config = {
       fontFamily: {
         display: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         body: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        hand: ['Caveat', 'Montserrat', 'cursive'],
       },
     },
   },
@@ -68,7 +69,6 @@ tailwind.config = {
   .btn-wrap{white-space:normal;line-height:1.35;text-align:center}
   .btn-primary{background:linear-gradient(135deg,#FDAF03,#FB6F0A);color:#1A0E02;box-shadow:0 12px 32px -12px rgba(251,111,10,.65)}
   .btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 42px -12px rgba(251,111,10,.75)}
-  /* background-color (не shorthand), чтобы не затирать слой блика на .header-cta */
   .btn-wa{background-color:#32A722;color:#04240F;box-shadow:0 12px 32px -12px rgba(50,167,34,.5)}
   .btn-wa:hover{transform:translateY(-2px);background-color:#28911C}
   .btn-outline{border:1px solid #334155;background-color:rgba(30,41,59,.55);color:#FDFCFC}
@@ -80,8 +80,6 @@ tailwind.config = {
   @media (min-width: 640px) {
     .header-cta { display: inline-flex !important; }
 
-    /* Бегущий блик: второй слой фона едет по кнопке.
-       Без пульса и без overflow — фон сам обрезан по скруглению. */
     .header-cta{
       background-image:
         linear-gradient(115deg,
@@ -173,7 +171,7 @@ tailwind.config = {
 
   .star-ico{width:1rem;height:1rem}
 
-  /* ===== Градиентный текст (inline — без обрезки и с рабочим nbsp) ===== */
+  /* ===== Градиентный текст ===== */
   .text-gradient{color:#FB6F0A}
   @supports ((-webkit-background-clip:text) or (background-clip:text)){
     .text-gradient{
@@ -185,6 +183,105 @@ tailwind.config = {
     }
   }
 
+  /* ===== Правая треть hero: прозрачный блок с фото-фоном + полароид поверх ===== */
+  .hero-media{
+    position:absolute; z-index:5;
+    right:3%; top:50%;
+    width:clamp(340px, 30vw, 460px);
+    aspect-ratio:3/4;
+    transform:translateY(-52%);
+    pointer-events:none;
+    opacity:0; animation:mediaIn .9s ease .5s forwards;
+  }
+  @keyframes mediaIn{
+    from{opacity:0; margin-top:26px}
+    to  {opacity:1; margin-top:0}
+  }
+  /* фон-фото блока */
+  .hero-media .backdrop{
+    position:absolute; inset:0; overflow:hidden;
+    background:#0B1426;
+    box-shadow:0 30px 60px -24px rgba(0,0,0,.7);
+  }
+  .hero-media .backdrop img{
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover;
+    animation:kbSlow 26s ease-in-out infinite alternate;
+  }
+  @keyframes kbSlow{
+    from{transform:scale(1)    translate(0,0)}
+    to  {transform:scale(1.12) translate(2%,-2%)}
+  }
+  /* затемнение, чтобы полароид читался на фото */
+  .hero-media .backdrop::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(6,10,13,.18) 0%, rgba(6,10,13,.30) 55%, rgba(6,10,13,.55) 100%);
+  }
+  /* заглушка, пока фото не добавлено */
+  .hero-media .backdrop .ph{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:.5rem;
+    color:#475569; font-family:'Montserrat',sans-serif; font-weight:700;
+    font-size:.8rem; letter-spacing:.06em; text-align:center; padding:1rem;
+  }
+  .hero-media .backdrop .ph .mount{
+    width:54px; height:54px; opacity:.5;
+  }
+  .hero-media .polaroid-holder{
+    position:absolute; right:-7%; bottom:-6%;
+    width:66%;
+    transform:rotate(-4deg);
+    pointer-events:auto;
+    filter:drop-shadow(0 26px 34px rgba(0,0,0,.55));
+  }
+  @media (max-width:1023px){ .hero-media{display:none} }
+
+  /* ===== Полароид (углы чёткие) ===== */
+  .polaroid{
+    position:relative;
+    width:100%;
+    background:linear-gradient(178deg,#FFFFFF 0%,#FBFCFD 55%,#EDF0F3 100%);
+    padding:3.4% 3.4% 0;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,.22),
+      0 10px 22px -8px rgba(0,0,0,.5);
+    transition:transform .45s ease, box-shadow .45s ease;
+  }
+  .polaroid:hover{transform:rotate(1.8deg)}
+  .polaroid .win{
+    position:relative; width:100%; aspect-ratio:4/3;
+    overflow:hidden; background:#0B1426;
+    box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
+  }
+  .polaroid .win::after{
+    content:''; position:absolute; inset:0; pointer-events:none;
+    box-shadow:inset 0 0 34px rgba(0,0,0,.32);
+  }
+  .polaroid .win::before{
+    content:''; position:absolute; inset:0; z-index:2; pointer-events:none;
+    background:linear-gradient(105deg, rgba(255,255,255,0) 34%, rgba(255,255,255,.16) 46%, rgba(255,255,255,.30) 50%, rgba(255,255,255,.16) 54%, rgba(255,255,255,0) 66%);
+  }
+  .polaroid .win svg,
+  .polaroid .win img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    opacity:0; animation:shotCycle 9.6s linear infinite;
+  }
+  .polaroid .win svg:nth-child(2),
+  .polaroid .win img:nth-child(2){animation-delay:3.2s}
+  .polaroid .win svg:nth-child(3),
+  .polaroid .win img:nth-child(3){animation-delay:6.4s}
+  @keyframes shotCycle{0%{opacity:0}4%,29%{opacity:1}35%,100%{opacity:0}}
+  .polaroid .pola-bottom{height:17.5%; display:flex; align-items:center; justify-content:center}
+  .polaroid .hand{
+    font-family:'Caveat',cursive; font-weight:600;
+    font-size:clamp(17px, 4.4vw, 24px);
+    color:#6B7280; letter-spacing:.02em; transform:rotate(-1.5deg);
+  }
+
+  /* мобильный полароид: под буллетами */
+  .pola-mobile{margin-top:2rem}
+  .pola-mobile .polaroid{width:min(340px, 78vw); margin-inline:auto}
+
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     .js .reveal,.js .bullet,.js .cta-anim,.js .stat{opacity:1;transform:none;transition:none}
@@ -193,6 +290,16 @@ tailwind.config = {
     .header-cta{animation:none}
     .pulse-wa{animation:none}
     .star,.anim{animation:none}
+    .hero-media{animation:none;opacity:1}
+    .hero-media .backdrop img{animation:none}
+    .polaroid .win svg,
+    .polaroid .win img{animation:none;opacity:1}
+    .polaroid .win svg:nth-child(2),
+    .polaroid .win img:nth-child(2),
+    .polaroid .win svg:nth-child(3),
+    .polaroid .win img:nth-child(3){opacity:0}
+    .polaroid{transform:rotate(-4deg)}
+    .hero-media .polaroid-holder{transform:rotate(-4deg)}
   }
 </style>
 </head>
@@ -340,6 +447,95 @@ tailwind.config = {
 
   <div class="absolute inset-0 bg-gradient-to-b from-night/80 via-night/40 to-night" aria-hidden="true"></div>
 
+  <!-- ===== Правая треть: прозрачный блок с фото-фоном + полароид поверх ===== -->
+  <div class="hero-media" aria-hidden="true">
+    <div class="backdrop">
+      <!-- Положите фото как img/hero-side.jpg (или замените расширение здесь) -->
+      <img src="img/hero-side.jpg" alt="" loading="lazy" decoding="async"
+           onerror="this.remove()">
+      <div class="ph">
+        <svg class="mount" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><use href="#i-mtn"/></svg>
+        Добавьте фото:<br>img/hero-side.jpg
+      </div>
+    </div>
+
+    <!-- Полароид поверх -->
+    <div class="polaroid-holder">
+      <div class="polaroid">
+        <div class="win">
+          <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#BFE6F7"/>
+            <circle cx="330" cy="48" r="18" fill="#FDD604"/>
+            <ellipse cx="90" cy="42" rx="30" ry="10" fill="#FDFCFC" opacity=".9"/>
+            <ellipse cx="220" cy="30" rx="24" ry="9" fill="#FDFCFC" opacity=".9"/>
+            <path d="M0 162 L80 100 L150 150 L222 94 L300 150 L356 118 L400 154 L400 205 L0 205 Z" fill="#7E93AC"/>
+            <path d="M80 100 L92 114 L70 116 Z" fill="#F5F7F2" opacity=".9"/>
+            <path d="M222 94 L234 108 L212 110 Z" fill="#F5F7F2" opacity=".9"/>
+            <g>
+              <path d="M20 204 l10 -18 10 18 Z" fill="#1F5E2A"/>
+              <path d="M56 206 l10 -18 10 18 Z" fill="#E8890C"/>
+              <path d="M92 204 l10 -18 10 18 Z" fill="#F5A623"/>
+              <path d="M128 206 l10 -18 10 18 Z" fill="#2E7D32"/>
+              <path d="M164 204 l10 -18 10 18 Z" fill="#E8890C"/>
+              <path d="M200 206 l10 -18 10 18 Z" fill="#1F5E2A"/>
+              <path d="M236 204 l10 -18 10 18 Z" fill="#F5A623"/>
+              <path d="M272 206 l10 -18 10 18 Z" fill="#E8890C"/>
+              <path d="M308 204 l10 -18 10 18 Z" fill="#2E7D32"/>
+              <path d="M344 206 l10 -18 10 18 Z" fill="#E8890C"/>
+            </g>
+            <rect y="200" width="400" height="62" fill="#2FA9E6"/>
+            <path d="M40 224 q30 5 60 0 M200 240 q30 5 60 0" stroke="#BFE9FB" stroke-width="2.5" fill="none" opacity=".6" stroke-linecap="round"/>
+            <path d="M0 262 Q100 250 200 260 T400 258 L400 300 L0 300 Z" fill="#3E7C3F"/>
+          </svg>
+          <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#0B0F14"/>
+            <circle cx="200" cy="180" r="95" fill="#FB6F0A" opacity=".14"/>
+            <path d="M110 300 L110 172 Q200 92 290 172 L290 300 Z" fill="#141C28"/>
+            <path d="M138 300 L138 186 Q200 122 262 186 L262 300 Z" fill="#FB6F0A" opacity=".22"/>
+            <path d="M156 300 L156 200 Q200 152 244 200 L244 300 Z" fill="#FB6F0A" opacity=".3"/>
+            <rect y="272" width="400" height="28" fill="#0D1219"/>
+            <g>
+              <circle cx="172" cy="238" r="7" fill="#05080C"/>
+              <rect x="163" y="245" width="18" height="30" rx="8" fill="#05080C"/>
+              <circle cx="203" cy="246" r="7" fill="#05080C"/>
+              <rect x="194" y="253" width="18" height="26" rx="8" fill="#05080C"/>
+              <circle cx="234" cy="240" r="7" fill="#05080C"/>
+              <rect x="225" y="247" width="18" height="28" rx="8" fill="#05080C"/>
+            </g>
+            <g fill="#FDE68A">
+              <circle cx="172" cy="236" r="2.4"/><circle cx="203" cy="244" r="2.4"/><circle cx="234" cy="238" r="2.4"/>
+            </g>
+            <g stroke="#FDE68A" stroke-width="2" opacity=".25">
+              <line x1="172" y1="236" x2="140" y2="222"/><line x1="203" y1="244" x2="238" y2="234"/><line x1="234" y1="238" x2="262" y2="226"/>
+            </g>
+          </svg>
+          <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#0B1026"/>
+            <g fill="#FDFCFC" opacity=".85">
+              <circle cx="40" cy="36" r="1.6"/><circle cx="110" cy="22" r="1.3"/><circle cx="180" cy="40" r="1.6"/>
+              <circle cx="255" cy="26" r="1.3"/><circle cx="330" cy="44" r="1.6"/><circle cx="370" cy="20" r="1.2"/>
+              <circle cx="70" cy="70" r="1.2"/><circle cx="300" cy="66" r="1.3"/><circle cx="150" cy="60" r="1.2"/>
+            </g>
+            <path d="M362 34 a14 14 0 1 0 10 24 a11 11 0 1 1 -10 -24 Z" fill="#F5F7F2" opacity=".9"/>
+            <path d="M0 205 L90 140 L180 196 L270 148 L400 206 L400 300 L0 300 Z" fill="#131C33"/>
+            <rect y="258" width="400" height="42" fill="#0A0F1C"/>
+            <circle cx="200" cy="248" r="56" fill="#FB6F0A" opacity=".3"/>
+            <circle cx="200" cy="248" r="30" fill="#FB6F0A" opacity=".35"/>
+            <path d="M200 210 q16 26 6 40 q-6 9 -6 9 q0 0 -6 -9 q-10 -14 6 -40 Z" fill="#FDAF03"/>
+            <path d="M200 226 q9 16 3.5 24 q-3.5 5 -3.5 5 q0 0 -3.5 -5 q-5.5 -8 3.5 -24 Z" fill="#FDD604"/>
+            <rect x="172" y="262" width="56" height="8" rx="4" fill="#6B4A2A" transform="rotate(-9 200 266)"/>
+            <rect x="172" y="262" width="56" height="8" rx="4" fill="#7A5632" transform="rotate(8 200 266)"/>
+            <circle cx="148" cy="252" r="7" fill="#05080C"/>
+            <path d="M134 286 q0 -26 14 -26 q14 0 14 26 Z" fill="#05080C"/>
+            <circle cx="256" cy="252" r="7" fill="#05080C"/>
+            <path d="M242 286 q0 -26 14 -26 q14 0 14 26 Z" fill="#05080C"/>
+          </svg>
+        </div>
+        <div class="pola-bottom"><span class="hand">@bayanaulotdyh.kz</span></div>
+      </div>
+    </div>
+  </div>
+
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
     <div class="max-w-3xl">
       <span class="inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/10 px-4 py-2 text-sm font-medium text-gold backdrop-blur-sm">
@@ -369,6 +565,82 @@ tailwind.config = {
         <div class="bullet flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm" style="transition-delay:.3s">
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-grass/15 text-grass"><svg class="ico h-5 w-5"><use href="#i-card"/></svg></span>
           <span class="text-sm leading-snug"><span class="block font-semibold text-ink">Оплата Kaspi</span><span class="text-slate-400">Red или QR со смартфона</span></span>
+        </div>
+      </div>
+
+      <!-- ===== Полароид-слайдер на мобильных: под буллетами ===== -->
+      <div class="pola-mobile lg:hidden">
+        <div class="polaroid">
+          <div class="win">
+            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#BFE6F7"/>
+              <circle cx="330" cy="48" r="18" fill="#FDD604"/>
+              <ellipse cx="90" cy="42" rx="30" ry="10" fill="#FDFCFC" opacity=".9"/>
+              <ellipse cx="220" cy="30" rx="24" ry="9" fill="#FDFCFC" opacity=".9"/>
+              <path d="M0 162 L80 100 L150 150 L222 94 L300 150 L356 118 L400 154 L400 205 L0 205 Z" fill="#7E93AC"/>
+              <path d="M80 100 L92 114 L70 116 Z" fill="#F5F7F2" opacity=".9"/>
+              <path d="M222 94 L234 108 L212 110 Z" fill="#F5F7F2" opacity=".9"/>
+              <g>
+                <path d="M20 204 l10 -18 10 18 Z" fill="#1F5E2A"/>
+                <path d="M56 206 l10 -18 10 18 Z" fill="#E8890C"/>
+                <path d="M92 204 l10 -18 10 18 Z" fill="#F5A623"/>
+                <path d="M128 206 l10 -18 10 18 Z" fill="#2E7D32"/>
+                <path d="M164 204 l10 -18 10 18 Z" fill="#E8890C"/>
+                <path d="M200 206 l10 -18 10 18 Z" fill="#1F5E2A"/>
+                <path d="M236 204 l10 -18 10 18 Z" fill="#F5A623"/>
+                <path d="M272 206 l10 -18 10 18 Z" fill="#E8890C"/>
+                <path d="M308 204 l10 -18 10 18 Z" fill="#2E7D32"/>
+                <path d="M344 206 l10 -18 10 18 Z" fill="#E8890C"/>
+              </g>
+              <rect y="200" width="400" height="62" fill="#2FA9E6"/>
+              <path d="M40 224 q30 5 60 0 M200 240 q30 5 60 0" stroke="#BFE9FB" stroke-width="2.5" fill="none" opacity=".6" stroke-linecap="round"/>
+              <path d="M0 262 Q100 250 200 260 T400 258 L400 300 L0 300 Z" fill="#3E7C3F"/>
+            </svg>
+            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#0B0F14"/>
+              <circle cx="200" cy="180" r="95" fill="#FB6F0A" opacity=".14"/>
+              <path d="M110 300 L110 172 Q200 92 290 172 L290 300 Z" fill="#141C28"/>
+              <path d="M138 300 L138 186 Q200 122 262 186 L262 300 Z" fill="#FB6F0A" opacity=".22"/>
+              <path d="M156 300 L156 200 Q200 152 244 200 L244 300 Z" fill="#FB6F0A" opacity=".3"/>
+              <rect y="272" width="400" height="28" fill="#0D1219"/>
+              <g>
+                <circle cx="172" cy="238" r="7" fill="#05080C"/>
+                <rect x="163" y="245" width="18" height="30" rx="8" fill="#05080C"/>
+                <circle cx="203" cy="246" r="7" fill="#05080C"/>
+                <rect x="194" y="253" width="18" height="26" rx="8" fill="#05080C"/>
+                <circle cx="234" cy="240" r="7" fill="#05080C"/>
+                <rect x="225" y="247" width="18" height="28" rx="8" fill="#05080C"/>
+              </g>
+              <g fill="#FDE68A">
+                <circle cx="172" cy="236" r="2.4"/><circle cx="203" cy="244" r="2.4"/><circle cx="234" cy="238" r="2.4"/>
+              </g>
+              <g stroke="#FDE68A" stroke-width="2" opacity=".25">
+                <line x1="172" y1="236" x2="140" y2="222"/><line x1="203" y1="244" x2="238" y2="234"/><line x1="234" y1="238" x2="262" y2="226"/>
+              </g>
+            </svg>
+            <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+              <rect width="400" height="300" fill="#0B1026"/>
+              <g fill="#FDFCFC" opacity=".85">
+                <circle cx="40" cy="36" r="1.6"/><circle cx="110" cy="22" r="1.3"/><circle cx="180" cy="40" r="1.6"/>
+                <circle cx="255" cy="26" r="1.3"/><circle cx="330" cy="44" r="1.6"/><circle cx="370" cy="20" r="1.2"/>
+                <circle cx="70" cy="70" r="1.2"/><circle cx="300" cy="66" r="1.3"/><circle cx="150" cy="60" r="1.2"/>
+              </g>
+              <path d="M362 34 a14 14 0 1 0 10 24 a11 11 0 1 1 -10 -24 Z" fill="#F5F7F2" opacity=".9"/>
+              <path d="M0 205 L90 140 L180 196 L270 148 L400 206 L400 300 L0 300 Z" fill="#131C33"/>
+              <rect y="258" width="400" height="42" fill="#0A0F1C"/>
+              <circle cx="200" cy="248" r="56" fill="#FB6F0A" opacity=".3"/>
+              <circle cx="200" cy="248" r="30" fill="#FB6F0A" opacity=".35"/>
+              <path d="M200 210 q16 26 6 40 q-6 9 -6 9 q0 0 -6 -9 q-10 -14 6 -40 Z" fill="#FDAF03"/>
+              <path d="M200 226 q9 16 3.5 24 q-3.5 5 -3.5 5 q0 0 -3.5 -5 q-5.5 -8 3.5 -24 Z" fill="#FDD604"/>
+              <rect x="172" y="262" width="56" height="8" rx="4" fill="#6B4A2A" transform="rotate(-9 200 266)"/>
+              <rect x="172" y="262" width="56" height="8" rx="4" fill="#7A5632" transform="rotate(8 200 266)"/>
+              <circle cx="148" cy="252" r="7" fill="#05080C"/>
+              <path d="M134 286 q0 -26 14 -26 q14 0 14 26 Z" fill="#05080C"/>
+              <circle cx="256" cy="252" r="7" fill="#05080C"/>
+              <path d="M242 286 q0 -26 14 -26 q14 0 14 26 Z" fill="#05080C"/>
+            </svg>
+          </div>
+          <div class="pola-bottom"><span class="hand">@bayanaulotdyh.kz</span></div>
         </div>
       </div>
 
