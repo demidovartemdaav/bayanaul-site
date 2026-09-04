@@ -21,18 +21,18 @@ tailwind.config = {
   theme: {
     extend: {
       colors: {
-        night: '#060A0D',      /* основной фон */
-        forest: '#0D4916',     /* хвойный зелёный: природные секции */
-        card: '#1E293B',       /* поверхности и карточки */
-        line: '#334155',       /* границы */
-        brand: '#FB6F0A',      /* CTA — оранжевый закат */
-        gold: '#FDAF03',       /* золотистый акцент */
-        sun: '#FDD604',        /* ярко-жёлтый (hover, блики) */
-        grass: '#32A722',      /* природный зелёный */
-        leaf: '#A3F430',       /* салатовый: hover, индикаторы */
-        water: '#029DF8',      /* синий воды */
-        lake: '#0BC7FC',       /* светло-голубой: hover, блики */
-        ink: '#FDFCFC',        /* заголовки и важный текст */
+        night: '#060A0D',
+        forest: '#0D4916',
+        card: '#1E293B',
+        line: '#334155',
+        brand: '#FB6F0A',
+        gold: '#FDAF03',
+        sun: '#FDD604',
+        grass: '#32A722',
+        leaf: '#A3F430',
+        water: '#029DF8',
+        lake: '#0BC7FC',
+        ink: '#FDFCFC',
       },
       fontFamily: {
         display: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
@@ -62,7 +62,6 @@ tailwind.config = {
   .btn{display:inline-flex;align-items:center;justify-content:center;gap:.6rem;border-radius:1rem;padding:.95rem 1.7rem;font-family:'Montserrat',ui-sans-serif,system-ui,sans-serif;font-weight:700;font-size:1rem;line-height:1.2;white-space:nowrap;max-width:100%;cursor:pointer;transition:all .3s ease}
   .btn:active{transform:scale(.96)}
   .btn-sm{padding:.62rem 1.1rem;font-size:.875rem;border-radius:.8rem}
-  /* кнопка с переносом текста — для длинных надписей на мобильных */
   .btn-wrap{white-space:normal;line-height:1.35;text-align:center}
   .btn-primary{background:linear-gradient(135deg,#FDAF03,#FB6F0A);color:#1A0E02;box-shadow:0 12px 32px -12px rgba(251,111,10,.65)}
   .btn-primary:hover{transform:translateY(-2px);box-shadow:0 18px 42px -12px rgba(251,111,10,.75)}
@@ -70,6 +69,13 @@ tailwind.config = {
   .btn-wa:hover{transform:translateY(-2px);background:#28911C}
   .btn-outline{border:1px solid #334155;background:rgba(30,41,59,.55);color:#FDFCFC}
   .btn-outline:hover{border-color:rgba(251,111,10,.6);color:#FDD604;transform:translateY(-2px)}
+
+  /* ===== Медленная постоянная пульсация CTA в шапке ===== */
+  .header-cta{animation:headerGlow 2.6s ease-in-out infinite}
+  @keyframes headerGlow{
+    0%,100%{box-shadow:0 0 0 0 rgba(251,111,10,0),0 10px 24px -12px rgba(50,167,34,.45);transform:scale(1)}
+    50%{box-shadow:0 0 0 8px rgba(251,111,10,.12),0 10px 30px -8px rgba(50,167,34,.65);transform:scale(1.045)}
+  }
 
   /* ===== ФИКС ШАПКИ ДЛЯ МОБИЛЬНЫХ ===== */
   html, body { overflow-x: hidden; }
@@ -113,30 +119,51 @@ tailwind.config = {
 
   .nav-scrolled{background:rgba(6,10,13,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(51,65,85,.7);box-shadow:0 12px 30px -14px rgba(0,0,0,.6)}
 
+  /* ===== Система scroll-анимаций ===== */
   .js .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
   .js .reveal.in{opacity:1;transform:none}
+  /* буллеты hero: каскад слева направо */
+  .js .bullet{opacity:0;transform:translateX(-22px);transition:opacity .55s ease,transform .55s cubic-bezier(.22,.9,.35,1.1)}
+  .js .bullet.in{opacity:1;transform:none}
+  /* кнопки hero: короткий подъём */
+  .js .cta-anim{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s cubic-bezier(.22,.9,.35,1.15)}
+  .js .cta-anim.in{opacity:1;transform:none}
+  /* кнопки внутри карточек: пружинный pop */
+  .js .card-cta{opacity:0;transform:scale(.85)}
+  .js .in .card-cta{animation:ctaPop .5s cubic-bezier(.3,1.4,.4,1) .35s both}
+  @keyframes ctaPop{
+    0%{opacity:0;transform:scale(.85)}
+    65%{opacity:1;transform:scale(1.06)}
+    100%{opacity:1;transform:scale(1)}
+  }
+  /* звёзды отзывов: пропульсируют по очереди */
+  .js .stars .st{opacity:0;transform:scale(0)}
+  .js .stars.in .st{animation:starPop .45s cubic-bezier(.3,1.6,.4,1) both}
+  .js .stars.in .st:nth-child(1){animation-delay:.05s}
+  .js .stars.in .st:nth-child(2){animation-delay:.15s}
+  .js .stars.in .st:nth-child(3){animation-delay:.25s}
+  .js .stars.in .st:nth-child(4){animation-delay:.35s}
+  .js .stars.in .st:nth-child(5){animation-delay:.45s}
+  @keyframes starPop{
+    0%{opacity:0;transform:scale(0) rotate(-45deg)}
+    70%{opacity:1;transform:scale(1.3) rotate(8deg)}
+    100%{opacity:1;transform:scale(1) rotate(0)}
+  }
+  /* цифры-счётчики: пульс при появлении */
+  .js .stat{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .js .stat.in{opacity:1;transform:none}
+  .js .stat.in .stat-num{animation:statPulse .7s ease .5s}
+  @keyframes statPulse{0%{transform:scale(1)}45%{transform:scale(1.14)}100%{transform:scale(1)}}
 
-  .star{animation:twinkle 4s ease-in-out infinite}
-  @keyframes twinkle{0%,100%{opacity:.25}50%{opacity:1}}
-
-  .pulse-wa{animation:pulseRing 2.2s cubic-bezier(.4,0,.6,1) infinite}
-  @keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(50,167,34,.45)}70%{box-shadow:0 0 0 18px rgba(50,167,34,0)}100%{box-shadow:0 0 0 0 rgba(50,167,34,0)}}
-
-  .acc-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.4,0,.2,1)}
-  .acc-body>div{overflow:hidden}
-  .acc.open .acc-body{grid-template-rows:1fr}
-  .acc-icon{transition:transform .35s ease}
-  .acc.open .acc-icon{transform:rotate(180deg)}
-
-  .anim{animation:fadeUp .5s ease both}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-  .text-gradient{background:linear-gradient(92deg,#FDD604 0%,#FDAF03 55%,#FB6F0A 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .star-ico{width:1rem;height:1rem}
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
-    .js .reveal{opacity:1;transform:none;transition:none}
-    .star,.pulse-wa,.anim{animation:none}
+    .js .reveal,.js .bullet,.js .cta-anim,.js .stat{opacity:1;transform:none;transition:none}
+    .js .card-cta{opacity:1;transform:none;animation:none}
+    .js .stars .st{opacity:1;transform:none;animation:none}
+    .header-cta{animation:none}
+    .star,.anim{animation:none}
   }
 </style>
 </head>
@@ -181,7 +208,6 @@ tailwind.config = {
         </span>
       </a>
 
-      <!-- Десктопная навигация (якоря) -->
       <nav class="hidden items-center gap-7 text-sm font-medium lg:flex" aria-label="Основная навигация">
         <a href="#afisha" class="text-slate-300 transition-colors hover:text-leaf">Афиша туров</a>
         <a href="#about" class="text-slate-300 transition-colors hover:text-leaf">Как всё устроено</a>
@@ -237,7 +263,6 @@ tailwind.config = {
 <main>
 <!-- ================= БЛОК 2: ГЛАВНЫЙ ЭКРАН ================= -->
 <section id="hero" class="relative flex min-h-[100svh] items-center overflow-hidden">
-  <!-- Подложка-иллюстрация: видна, пока грузится hero.webp (или если фото не добавлено) -->
   <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -280,12 +305,10 @@ tailwind.config = {
     <path d="M0 900 L0 845 L28 855 L58 805 L88 852 L118 822 L148 858 L188 792 L218 850 L258 812 L298 862 L328 800 L368 852 L398 825 L438 868 L478 795 L518 848 L558 815 L598 862 L638 802 L678 852 L718 820 L758 868 L798 798 L838 852 L878 815 L918 862 L958 792 L998 848 L1038 810 L1078 862 L1118 798 L1158 852 L1198 820 L1238 868 L1278 798 L1318 850 L1358 815 L1398 862 L1440 808 L1440 900 Z" fill="#050D04"/>
   </svg>
 
-  <!-- Фоновое фото hero: плавно проявляется после загрузки -->
   <img src="img/hero.webp" alt="" aria-hidden="true" fetchpriority="high" decoding="async"
        onload="this.style.opacity='1'"
        class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700" style="opacity:0">
 
-  <!-- Затемнение для читаемости текста -->
   <div class="absolute inset-0 bg-gradient-to-b from-night/80 via-night/40 to-night" aria-hidden="true"></div>
 
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
@@ -300,33 +323,36 @@ tailwind.config = {
         Однодневные и двухдневные туры выходного дня: горы, озёра Жасыбай и Торайгыр, сакральные места, пещеры и скалы. Места, эмоции и новые друзья 🌿
       </p>
 
+      <!-- буллеты: каскад слева направо -->
       <div class="mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
-        <div class="flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm">
+        <div class="bullet flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm">
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold"><svg class="ico h-5 w-5"><use href="#i-bus"/></svg></span>
           <span class="text-sm leading-snug"><span class="block font-semibold text-ink">Комфортный выезд</span><span class="text-slate-400">из Павлодара и обратно</span></span>
         </div>
-        <div class="flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm">
+        <div class="bullet flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm" style="transition-delay:.1s">
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold"><svg class="ico h-5 w-5"><use href="#i-route"/></svg></span>
           <span class="text-sm leading-snug"><span class="block font-semibold text-ink">Проверенные маршруты</span><span class="text-slate-400">от лёгких до активных</span></span>
         </div>
-        <div class="flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm">
+        <div class="bullet flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm" style="transition-delay:.2s">
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-grass/15 text-grass"><svg class="ico h-5 w-5"><use href="#i-users"/></svg></span>
           <span class="text-sm leading-snug"><span class="block font-semibold text-ink">Дружная компания</span><span class="text-slate-400">маленькие группы</span></span>
         </div>
-        <div class="flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm">
+        <div class="bullet flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm" style="transition-delay:.3s">
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-grass/15 text-grass"><svg class="ico h-5 w-5"><use href="#i-card"/></svg></span>
           <span class="text-sm leading-snug"><span class="block font-semibold text-ink">Оплата Kaspi</span><span class="text-slate-400">Red или QR со смартфона</span></span>
         </div>
       </div>
 
+      <!-- кнопки hero: короткая анимация по скроллу -->
       <div class="mt-10 flex flex-wrap gap-4">
-        <a href="#afisha" class="btn btn-primary">Смотреть афишу туров<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></a>
-        <a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener" class="btn btn-outline">
+        <a href="#afisha" class="btn btn-primary cta-anim">Смотреть афишу туров<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></a>
+        <a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener" class="btn btn-outline cta-anim" style="transition-delay:.12s">
           <svg class="ico-f h-5 w-5 text-grass"><use href="#i-wa"/></svg>Написать в WhatsApp
         </a>
       </div>
     </div>
   </div>
+
   <a href="#afisha" class="absolute bottom-5 left-1/2 z-10 hidden -translate-x-1/2 animate-bounce text-slate-300/70 md:block" aria-label="Прокрутить к афише">
     <svg class="ico h-7 w-7"><use href="#i-chev"/></svg>
   </a>
@@ -335,20 +361,20 @@ tailwind.config = {
 <!-- Полоса доверия -->
 <div class="border-y border-line/60 bg-card/40">
   <div class="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-9 text-center sm:px-6 md:grid-cols-4">
-    <div class="reveal">
-      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span data-count="23800" data-suffix="+">23 800+</span></p>
+    <div class="stat">
+      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span class="stat-num inline-block" data-count="23800" data-suffix="+">23 800+</span></p>
       <p class="mt-1 text-sm text-slate-400">подписчиков в Instagram</p>
     </div>
-    <div class="reveal" style="transition-delay:.08s">
-      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span data-count="664">664</span></p>
+    <div class="stat" style="transition-delay:.08s">
+      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span class="stat-num inline-block" data-count="664">664</span></p>
       <p class="mt-1 text-sm text-slate-400">публикаций о путешествиях</p>
     </div>
-    <div class="reveal" style="transition-delay:.16s">
-      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span data-count="20" data-suffix="+">20+</span></p>
+    <div class="stat" style="transition-delay:.16s">
+      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span class="stat-num inline-block" data-count="20" data-suffix="+">20+</span></p>
       <p class="mt-1 text-sm text-slate-400">локаций в маршрутах</p>
     </div>
-    <div class="reveal" style="transition-delay:.24s">
-      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span data-count="17">17</span></p>
+    <div class="stat" style="transition-delay:.24s">
+      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span class="stat-num inline-block" data-count="17">17</span></p>
       <p class="mt-1 text-sm text-slate-400">дат в осеннем расписании туров</p>
     </div>
   </div>
@@ -363,7 +389,6 @@ tailwind.config = {
       <p class="mt-4 leading-relaxed">Осенью в Баянаул — идеальный день на природе: яркие краски, спокойствие и незабываемые виды. Сбор групп — в г. Павлодар. Выберите месяц, откройте программу и забронируйте места.</p>
     </div>
 
-    <!-- Переключатель месяцев -->
     <div class="mt-10 flex justify-center reveal" role="tablist" aria-label="Месяцы">
       <div class="inline-flex rounded-2xl border border-line bg-card p-1.5">
         <button type="button" role="tab" aria-selected="true" data-month="sep" class="tab-btn tab-active">Сентябрь</button>
@@ -375,7 +400,7 @@ tailwind.config = {
     <div id="month-sep">
       <div class="mt-10 grid gap-6 lg:grid-cols-2">
 
-        <article class="acc relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
+        <article class="acc reveal relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
           <div class="p-6 md:p-8">
             <div class="flex flex-wrap items-center gap-2.5">
               <span class="chip chip-amber"><svg class="ico h-3.5 w-3.5"><use href="#i-cal"/></svg>5, 6, 12, 13 сентября</span>
@@ -404,7 +429,7 @@ tailwind.config = {
                 <p class="flex items-baseline gap-2"><span class="font-display text-3xl font-extrabold text-brand">16 000 ₸</span><span class="text-sm">/ взрослый</span></p>
                 <p class="mt-1 text-sm">детский до 10 лет — <span class="font-medium text-ink">15 000 ₸</span></p>
               </div>
-              <button type="button" data-tour="«Классика Баянаула» — 5, 6, 12, 13 сентября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
+              <button type="button" data-tour="«Классика Баянаула» — 5, 6, 12, 13 сентября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary card-cta">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
             </div>
             <p class="mt-4 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
               <svg class="ico h-3.5 w-3.5"><use href="#i-card"/></svg>Оплата Kaspi Red / QR · сборная группа · выезд из Павлодара · 1 день
@@ -412,7 +437,7 @@ tailwind.config = {
           </div>
         </article>
 
-        <article class="acc relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
+        <article class="acc reveal relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
           <div class="p-6 md:p-8">
             <div class="flex flex-wrap items-center gap-2.5">
               <span class="chip chip-amber"><svg class="ico h-3.5 w-3.5"><use href="#i-cal"/></svg>19, 20, 26, 27 сентября</span>
@@ -438,7 +463,7 @@ tailwind.config = {
                 <p class="flex items-baseline gap-2"><span class="font-display text-3xl font-extrabold text-brand">16 000 ₸</span><span class="text-sm">/ взрослый</span></p>
                 <p class="mt-1 text-sm">детский до 10 лет — <span class="font-medium text-ink">15 000 ₸</span></p>
               </div>
-              <button type="button" data-tour="«Сабындыколь и тайные места» — 19, 20, 26, 27 сентября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
+              <button type="button" data-tour="«Сабындыколь и тайные места» — 19, 20, 26, 27 сентября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary card-cta">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
             </div>
             <p class="mt-4 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
               <svg class="ico h-3.5 w-3.5"><use href="#i-card"/></svg>Оплата Kaspi Red / QR · сборная группа · выезд из Павлодара · 1 день
@@ -453,7 +478,7 @@ tailwind.config = {
     <div id="month-oct" class="hidden">
       <div class="mt-10 grid gap-6 lg:grid-cols-2">
 
-        <article class="acc relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
+        <article class="acc reveal relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
           <div class="p-6 md:p-8">
             <div class="flex flex-wrap items-center gap-2.5">
               <span class="chip chip-amber"><svg class="ico h-3.5 w-3.5"><use href="#i-cal"/></svg>3, 4, 10, 11 октября</span>
@@ -486,7 +511,7 @@ tailwind.config = {
                 <p class="flex items-baseline gap-2"><span class="font-display text-3xl font-extrabold text-brand">16 000 ₸</span><span class="text-sm">/ человек</span></p>
                 <p class="mt-1 text-sm">мини-группа — <span class="font-medium text-ink">6 человек</span></p>
               </div>
-              <button type="button" data-tour="«Пещеры, скалы и кристаллы» — 3, 4, 10, 11 октября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
+              <button type="button" data-tour="«Пещеры, скалы и кристаллы» — 3, 4, 10, 11 октября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary card-cta">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
             </div>
             <p class="mt-4 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
               <svg class="ico h-3.5 w-3.5"><use href="#i-card"/></svg>Оплата Kaspi Red / QR · мини-группа 6 человек · выезд из Павлодара · 1 день
@@ -494,7 +519,7 @@ tailwind.config = {
           </div>
         </article>
 
-        <article class="acc relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
+        <article class="acc reveal relative overflow-hidden rounded-3xl border border-line bg-card transition-colors hover:border-brand/40">
           <div class="p-6 md:p-8">
             <div class="flex flex-wrap items-center gap-2.5">
               <span class="chip chip-amber"><svg class="ico h-3.5 w-3.5"><use href="#i-cal"/></svg>17, 18, 24, 25, 31 октября</span>
@@ -522,7 +547,7 @@ tailwind.config = {
                 <p class="flex items-baseline gap-2"><span class="font-display text-3xl font-extrabold text-brand">16 000 ₸</span><span class="text-sm">/ взрослый</span></p>
                 <p class="mt-1 text-sm">детский до 10 лет — <span class="font-medium text-ink">15 000 ₸</span></p>
               </div>
-              <button type="button" data-tour="«Панорамы Жасыбая» — 17, 18, 24, 25, 31 октября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
+              <button type="button" data-tour="«Панорамы Жасыбая» — 17, 18, 24, 25, 31 октября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary card-cta">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
             </div>
             <p class="mt-4 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
               <svg class="ico h-3.5 w-3.5"><use href="#i-card"/></svg>Оплата Kaspi Red / QR · сборная группа · выезд из Павлодара · 1 день
@@ -542,13 +567,13 @@ tailwind.config = {
           <p class="mt-1">Места в группах ограничены. Бронируйте заранее, чтобы точно попасть в дату.</p>
         </div>
       </div>
-      <button type="button" onclick="openBooking()" class="btn btn-primary whitespace-nowrap">Забронировать места</button>
+      <button type="button" onclick="openBooking()" class="btn btn-primary card-cta whitespace-nowrap">Забронировать места</button>
     </div>
     <p class="mt-6 text-center text-sm text-slate-500">Даты могут дополняться — актуальное расписание всегда в Instagram <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="font-medium text-gold hover:text-leaf">@bayanaulotdyh.kz</a></p>
   </div>
 </section>
 
-<!-- ================= БЛОК 4: ЧТО ВХОДИТ В ТУР (природная секция) ================= -->
+<!-- ================= БЛОК 4: ЧТО ВХОДИТ В ТУР ================= -->
 <section id="about" class="border-t border-line/50 bg-forest py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
@@ -662,7 +687,7 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ================= БЛОК 6: ОТЗЫВЫ (природная секция) ================= -->
+<!-- ================= БЛОК 6: ОТЗЫВЫ ================= -->
 <section id="reviews" class="border-y border-line/50 bg-forest py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
@@ -673,7 +698,9 @@ tailwind.config = {
 
     <div class="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       <div class="reveal rounded-3xl border border-line bg-card p-6">
-        <div class="flex gap-1 text-gold"><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg></div>
+        <div class="stars flex gap-1 text-gold">
+          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
+        </div>
         <p class="mt-4 text-sm leading-relaxed text-slate-300">«Ездили с подругами к озеру Торайгыр и Камню Кольцо. Всё чётко: трансфер, тайминг, гид. Ни о чём не пришлось думать — только любоваться видами и делать фото!»</p>
         <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
           <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">А</span>
@@ -682,7 +709,9 @@ tailwind.config = {
       </div>
 
       <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.06s">
-        <div class="flex gap-1 text-gold"><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg></div>
+        <div class="stars flex gap-1 text-gold">
+          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
+        </div>
         <p class="mt-4 text-sm leading-relaxed text-slate-300">«Сложный маршрут: Коныр Аулие, Скала Танк, карьер с кристаллами. Маленькая группа, инструктор всегда рядом и подстраховывал. Подготовленным людям — однозначно советую!»</p>
         <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
           <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">Д</span>
@@ -691,7 +720,9 @@ tailwind.config = {
       </div>
 
       <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.12s">
-        <div class="flex gap-1 text-gold"><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg></div>
+        <div class="stars flex gap-1 text-gold">
+          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
+        </div>
         <p class="mt-4 text-sm leading-relaxed text-slate-300">«Мой первый поход — и такой душевный! Организация на высоте, компания тёплая, виды нереальные. Уже записалась на следующую дату.»</p>
         <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
           <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">А</span>
@@ -700,7 +731,9 @@ tailwind.config = {
       </div>
 
       <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.18s">
-        <div class="flex gap-1 text-gold"><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg></div>
+        <div class="stars flex gap-1 text-gold">
+          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
+        </div>
         <p class="mt-4 text-sm leading-relaxed text-slate-300">«Отличный способ провести выходной: собрали в Павлодаре, довезли, провели по маршруту и вернули домой, полным впечатлений. Цена полностью оправдана.»</p>
         <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
           <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">С</span>
@@ -709,7 +742,9 @@ tailwind.config = {
       </div>
 
       <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.24s">
-        <div class="flex gap-1 text-gold"><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg></div>
+        <div class="stars flex gap-1 text-gold">
+          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
+        </div>
         <p class="mt-4 text-sm leading-relaxed text-slate-300">«Дочь в восторге от Сабындыколя и „Бабы Яги“! Детский билет — приятный бонус. Спасибо гидам за заботу и тёплую атмосферу.»</p>
         <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
           <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">Ж</span>
@@ -718,7 +753,9 @@ tailwind.config = {
       </div>
 
       <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.3s">
-        <div class="flex gap-1 text-gold"><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg><svg class="h-4 w-4"><use href="#i-star"/></svg></div>
+        <div class="stars flex gap-1 text-gold">
+          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
+        </div>
         <p class="mt-4 text-sm leading-relaxed text-slate-300">«Ездим уже не первый сезон. Каждый маршрут продуман до мелочей, гиды знают историю каждого камня. Это уже не просто туры — это наша традиция.»</p>
         <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
           <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">Е</span>
@@ -740,17 +777,17 @@ tailwind.config = {
         <p class="mx-auto mt-4 max-w-xl leading-relaxed">Места в группах ограничены — осенние даты разбирают быстро. Напишите нам, и мы подберём удобную дату и ответим на все вопросы.</p>
 
         <div class="mx-auto mt-8 grid max-w-3xl gap-4 sm:grid-cols-3">
-          <a href="https://wa.me/77769191402?text=Здравствуйте! Хочу забронировать тур в Баянаул 🍂" target="_blank" rel="noopener" class="rounded-2xl border border-grass/30 bg-grass/10 p-5 transition hover:-translate-y-1 hover:bg-grass/15">
+          <a href="https://wa.me/77769191402?text=Здравствуйте! Хочу забронировать тур в Баянаул 🍂" target="_blank" rel="noopener" class="reveal rounded-2xl border border-grass/30 bg-grass/10 p-5 transition hover:-translate-y-1 hover:bg-grass/15" style="transition-delay:.08s">
             <svg class="ico-f mx-auto h-8 w-8 text-grass"><use href="#i-wa"/></svg>
             <p class="mt-3 font-display font-bold text-ink">WhatsApp 1</p>
             <p class="mt-1 text-sm text-slate-300">+7 776 919 14 02</p>
           </a>
-          <a href="https://wa.me/77054057414?text=Здравствуйте! Хочу забронировать тур в Баянаул 🍂" target="_blank" rel="noopener" class="rounded-2xl border border-grass/30 bg-grass/10 p-5 transition hover:-translate-y-1 hover:bg-grass/15">
+          <a href="https://wa.me/77054057414?text=Здравствуйте! Хочу забронировать тур в Баянаул 🍂" target="_blank" rel="noopener" class="reveal rounded-2xl border border-grass/30 bg-grass/10 p-5 transition hover:-translate-y-1 hover:bg-grass/15" style="transition-delay:.16s">
             <svg class="ico-f mx-auto h-8 w-8 text-grass"><use href="#i-wa"/></svg>
             <p class="mt-3 font-display font-bold text-ink">WhatsApp 2</p>
             <p class="mt-1 text-sm text-slate-300">+7 705 405 74 14</p>
           </a>
-          <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5 transition hover:-translate-y-1 hover:bg-rose-500/15">
+          <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="reveal rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5 transition hover:-translate-y-1 hover:bg-rose-500/15" style="transition-delay:.24s">
             <svg class="ico-f mx-auto h-8 w-8 text-rose-400"><use href="#i-ig"/></svg>
             <p class="mt-3 font-display font-bold text-ink">Instagram</p>
             <p class="mt-1 text-sm text-slate-300">@bayanaulotdyh.kz</p>
@@ -848,7 +885,7 @@ tailwind.config = {
 
 <!-- Плавающая кнопка WhatsApp -->
 <a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener"
-   class="pulse-wa fab-wa" aria-label="Написать в WhatsApp">
+   class="fab-wa" aria-label="Написать в WhatsApp">
   <svg class="ico-f h-7 w-7"><use href="#i-wa"/></svg>
 </a>
 
@@ -948,13 +985,18 @@ function closeBooking() {
 modal.querySelector('[data-modal-backdrop]').addEventListener('click', closeBooking);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeBooking(); closeMenu(); } });
 
-/* Появление блоков при скролле */
+/* ===== Scroll-анимации: reveal + каскады ===== */
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 const io = new IntersectionObserver(entries => {
   entries.forEach(en => {
-    if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+    if (!en.isIntersecting) return;
+    en.target.classList.add('in');
+    io.unobserve(en.target);
   });
-}, { threshold: .12 });
-document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+}, { threshold: .15, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal, .bullet, .cta-anim, .stat, .stars').forEach(el => io.observe(el));
 
 /* Анимация счётчиков */
 const cio = new IntersectionObserver(entries => {
@@ -995,9 +1037,9 @@ document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
   while (walker.nextNode()) nodes.push(walker.currentNode);
   nodes.forEach(n => {
     n.nodeValue = n.nodeValue
-      .replace(/(^|\s)([а-яё]{1,2})\s(?=\S)/gi, '$1$2' + NBSP)   /* «в Баянаул» -> «в␣Баянаул» */
-      .replace(/(\d)\s(?=\d{3}\b)/g, '$1' + NBSP)                /* «16 000» не разрывается */
-      .replace(/(\d)\s(?=₸)/g, '$1' + NBSP);                     /* «000 ₸» не разрывается */
+      .replace(/(^|\s)([а-яё]{1,2})\s(?=\S)/gi, '$1$2' + NBSP)
+      .replace(/(\d)\s(?=\d{3}\b)/g, '$1' + NBSP)
+      .replace(/(\d)\s(?=₸)/g, '$1' + NBSP);
   });
 })();
 </script>
