@@ -170,24 +170,26 @@ tailwind.config = {
   @keyframes statPulse{0%{transform:scale(1)}45%{transform:scale(1.14)}100%{transform:scale(1)}}
 
   .star-ico{width:1rem;height:1rem}
-
-  /* ===== Градиентный текст ===== */
-  .text-gradient{color:#FB6F0A}
-  @supports ((-webkit-background-clip:text) or (background-clip:text)){
-    .text-gradient{
-      background:linear-gradient(92deg,#FDD604 0%,#FDAF03 55%,#FB6F0A 100%);
-      -webkit-background-clip:text;
-      background-clip:text;
-      -webkit-text-fill-color:transparent;
-      color:transparent;
-    }
-  }
-
-  /* ===== Фоновый листопад на hero (transform — плавно) ===== */
+    /* ===== Фоновый листопад на hero ===== */
   .leaves{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
   .leaf{
     position:absolute;
+    top:-6%;
+    opacity:0;
+    width:clamp(10px,1.3vw,16px);
+    height:clamp(12px,1.5vw,19px);
+    background:var(--lc,#FDAF03);
+    border-radius:80% 0 80% 0;
+    animation:
+      leafFall var(--fd,14s) linear var(--dl,0s) infinite,
+      leafSway 3.4s ease-in-out var(--dl,0s) infinite alternate,
+      leafSpin 6s linear var(--dl,0s) infinite,
+      leafIn 1.2s ease var(--dl,0s) both;
+  }
+    .leaf{
+    position:absolute;
     top:0;
+    left:0;
     opacity:0;
     width:clamp(10px,1.3vw,16px);
     height:clamp(12px,1.5vw,19px);
@@ -197,13 +199,13 @@ tailwind.config = {
     animation:leafFly var(--fd,14s) linear var(--dl,0s) infinite;
   }
   @keyframes leafFly{
-    0%  {opacity:0; transform:translate(0,-60px) rotate(0deg)}
+    0%  {opacity:0; transform:translate(var(--x0), -60px) rotate(0deg)}
     8%  {opacity:.75}
-    25% {transform:translate(var(--x1,20px),22vh) rotate(140deg)}
-    50% {transform:translate(var(--x2,24px),48vh) rotate(255deg)}
-    75% {transform:translate(var(--x1,20px),74vh) rotate(400deg)}
+    25% {transform:translate(var(--x1), 22vh) rotate(140deg)}
+    50% {transform:translate(var(--x2), 48vh) rotate(255deg)}
+    75% {transform:translate(var(--x1), 74vh) rotate(400deg)}
     92% {opacity:.75}
-    100%{opacity:0; transform:translate(0,calc(100vh + 60px)) rotate(540deg)}
+    100%{opacity:0; transform:translate(var(--x0), calc(100vh + 60px)) rotate(540deg)}
   }
 
   /* ===== Десктоп: сцена (прозрачный WebP) + полароид в правой части hero ===== */
@@ -295,12 +297,31 @@ tailwind.config = {
     color:#6B7280; letter-spacing:.02em; transform:rotate(-1.5deg);
   }
 
-  /* ===== Мобильная композиция: картинка сцены + полароид в обычном потоке ===== */
-  .pola-mobile{margin-top:2.5rem}
-
-  /* ===== Мобильный фикс: тап по лентам пузырей не влияет на анимацию ===== */
-  .bubbles-wrap{pointer-events:none}
-  .bubbles-track{touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  /* ===== Мобильная композиция: сцена за полароидом через ::before ===== */
+  .pola-mobile{
+    position:relative;
+    margin-top:2.5rem;
+    padding-bottom:15%;
+  }
+  .pola-mobile .polaroid{
+    position:relative;
+    z-index:2;
+    width:min(425px,88vw);
+    margin-inline:auto;
+    transform:translateY(14%);
+  }
+  .pola-mobile::before{
+    content:'';
+    position:absolute;
+    left:50%;
+    bottom:9%;
+    transform:translateX(-50%);
+    width:115%;
+    aspect-ratio:3/4;
+    background:url('img/hero-side.webp') center bottom / contain no-repeat;
+    pointer-events:none;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.55)) drop-shadow(0 0 55px rgba(251,111,10,.28));
+  }
 
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
@@ -315,9 +336,56 @@ tailwind.config = {
     .polaroid .win img:nth-child(n+2){opacity:0}
     .polaroid{transform:rotate(-4deg)}
     .hero-media .polaroid-holder{transform:rotate(-4deg)}
-    .leaf{display:none}
+    .pola-mobile::before{filter:none}
   }
-</style>
+    /* Мобильная сцена за полароидом: размеры в vw — детерминированно */
+  .pola-mobile{position:relative;margin-top:4rem;padding-bottom:6%}
+  .pola-mobile::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:96vw;
+    height:100vw;
+    background:url('img/hero-side.webp') center bottom / contain no-repeat;
+    pointer-events:none;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.55)) drop-shadow(0 0 55px rgba(251,111,10,.28));
+  }
+  .pola-mobile .polaroid{
+    position:relative;
+    z-index:2;
+    width:min(425px,88vw);
+    margin:62vw auto 0;
+    transform:rotate(-4deg);
+  }
+  /* Мобильная сцена: зеркало десктопной композиции */
+  .pola-mobile{
+    position:relative;
+    width:min(425px,88vw);
+    margin:3rem auto 5.5rem;
+    aspect-ratio:3/4;
+    padding:0;
+  }
+  .pola-mobile::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    transform:none;
+    background:url('img/hero-side.webp') center 5% / contain no-repeat;
+    filter:drop-shadow(0 16px 28px rgba(0,0,0,.55)) drop-shadow(0 0 55px rgba(251,111,10,.28));
+  }
+  .pola-mobile .polaroid{
+    position:absolute;
+    left:50%;
+    bottom:-7%;
+    width:85%;
+    margin:0;
+    transform:translateX(-50%) rotate(-4deg);
+    z-index:2;
+  }</style>
 </head>
 <body class="bg-night font-body text-slate-400 antialiased">
 
@@ -462,19 +530,18 @@ tailwind.config = {
        class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700" style="opacity:0">
 
   <div class="absolute inset-0 bg-gradient-to-b from-night/80 via-night/40 to-night" aria-hidden="true"></div>
-
-  <!-- ===== Фоновый листопад ===== -->
   <div class="leaves" aria-hidden="true">
-    <span class="leaf" style="left:6%;--fd:17s;--dl:0s;--x1:22px;--x2:-18px;--lc:#FDAF03"></span>
-    <span class="leaf" style="left:17%;--fd:22s;--dl:4s;--x1:-26px;--x2:20px;--lc:#C96A12"></span>
-    <span class="leaf" style="left:29%;--fd:15s;--dl:9s;--x1:18px;--x2:24px;--lc:#FB6F0A"></span>
-    <span class="leaf" style="left:41%;--fd:25s;--dl:2s;--x1:-20px;--x2:-28px;--lc:#FDAF03"></span>
-    <span class="leaf" style="left:52%;--fd:19s;--dl:12s;--x1:24px;--x2:-16px;--lc:#C96A12"></span>
-    <span class="leaf" style="left:63%;--fd:14s;--dl:6s;--x1:-18px;--x2:22px;--lc:#FDD604"></span>
-    <span class="leaf" style="left:74%;--fd:23s;--dl:15s;--x1:26px;--x2:-20px;--lc:#FB6F0A"></span>
-    <span class="leaf" style="left:84%;--fd:16s;--dl:8s;--x1:-22px;--x2:26px;--lc:#FDAF03"></span>
-    <span class="leaf" style="left:93%;--fd:20s;--dl:11s;--x1:20px;--x2:18px;--lc:#C96A12"></span>
-  </div>
+<span class="leaf" style="left:6%;--fd:17s;--dl:0s;--x0:0px;--x1:22px;--x2:-18px;--lc:#FDAF03"></span>
+<span class="leaf" style="left:17%;--fd:22s;--dl:4s;--x0:0px;--x1:-26px;--x2:20px;--lc:#C96A12"></span>
+<span class="leaf" style="left:29%;--fd:15s;--dl:9s;--x0:0px;--x1:18px;--x2:24px;--lc:#FB6F0A"></span>
+<span class="leaf" style="left:41%;--fd:25s;--dl:2s;--x0:0px;--x1:-20px;--x2:-28px;--lc:#FDAF03"></span>
+<span class="leaf" style="left:52%;--fd:19s;--dl:12s;--x0:0px;--x1:24px;--x2:-16px;--lc:#C96A12"></span>
+<span class="leaf" style="left:63%;--fd:14s;--dl:6s;--x0:0px;--x1:-18px;--x2:22px;--lc:#FDD604"></span>
+<span class="leaf" style="left:74%;--fd:23s;--dl:15s;--x0:0px;--x1:26px;--x2:-20px;--lc:#FB6F0A"></span>
+<span class="leaf" style="left:84%;--fd:16s;--dl:8s;--x0:0px;--x1:-22px;--x2:26px;--lc:#FDAF03"></span>
+<span class="leaf" style="left:93%;--fd:20s;--dl:11s;--x0:0px;--x1:20px;--x2:18px;--lc:#C96A12"></span>
+</div>
+
 
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
 
@@ -530,12 +597,9 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- ===== Мобильная композиция (до 1280px): картинка сцены, полароид перекрывает на 25px ===== -->
+      <!-- ===== Мобильная композиция (до 1280px): сцена за полароидом через ::before ===== -->
       <div class="pola-mobile xl:hidden">
-        <img src="img/hero-side.webp" alt="" loading="lazy" decoding="async"
-             style="display:block;width:min(420px,92vw);height:auto;margin:0 auto -25px;position:relative;z-index:1"
-             onerror="this.remove()">
-        <div class="polaroid" style="position:relative;z-index:2">
+        <div class="polaroid">
           <div class="win">
             <img src="img/p1.webp" alt="" loading="lazy" decoding="async">
             <img src="img/p2.webp" alt="" loading="lazy" decoding="async">
@@ -744,4 +808,553 @@ tailwind.config = {
                 <li class="flex items-start gap-2.5 text-sm text-slate-300"><svg class="ico mt-0.5 h-4 w-4 shrink-0 text-lake"><use href="#i-check"/></svg>Серпантин (смотровая)</li>
                 <li class="flex items-start gap-2.5 text-sm text-slate-300"><svg class="ico mt-0.5 h-4 w-4 shrink-0 text-lake"><use href="#i-check"/></svg>Царство Березняк</li>
                 <li class="flex items-start gap-2.5 text-sm text-slate-300"><svg class="ico mt-0.5 h-4 w-4 shrink-0 text-lake"><use href="#i-check"/></svg>Смотровая Площадка</li>
-                <li class="flex items-start gap-2.5 text-sm text-slate-300"><svg class="ico
+                <li class="flex items-start gap-2.5 text-sm text-slate-300"><svg class="ico mt-0.5 h-4 w-4 shrink-0 text-lake"><use href="#i-check"/></svg>Озеро Жасыбай</li>
+                <li class="flex items-start gap-2.5 text-sm text-slate-300"><svg class="ico mt-0.5 h-4 w-4 shrink-0 text-lake"><use href="#i-check"/></svg>Скала Баба Дедка</li>
+              </ul>
+            </div></div>
+            <div class="mt-7 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-line pt-6">
+              <div>
+                <p class="flex items-baseline gap-2"><span class="font-display text-3xl font-extrabold text-brand">16 000 ₸</span><span class="text-sm">/ взрослый</span></p>
+                <p class="mt-1 text-sm">детский до 10 лет — <span class="font-medium text-ink">15 000 ₸</span></p>
+              </div>
+              <button type="button" data-tour="«Панорамы Жасыбая» — 17, 18, 24, 25, 31 октября" onclick="openBooking(this.dataset.tour)" class="btn btn-primary card-cta">Забронировать<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></button>
+            </div>
+            <p class="mt-4 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
+              <svg class="ico h-3.5 w-3.5"><use href="#i-card"/></svg>Оплата Kaspi Red / QR · сборная группа · выезд из Павлодара · 1 день
+            </p>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- Элемент срочности -->
+    <div class="mt-10 flex flex-col justify-between gap-6 rounded-3xl border border-brand/30 bg-gradient-to-r from-brand/15 via-brand/5 to-transparent p-6 md:flex-row md:items-center md:p-8 reveal">
+      <div class="flex items-start gap-4">
+        <span class="text-4xl">🍁</span>
+        <div>
+          <h3 class="font-display text-xl font-bold text-ink md:text-2xl">Осень длится недолго — успей поймать её настроение!</h3>
+          <p class="mt-1">Места в группах ограничены. Бронируйте заранее, чтобы точно попасть в дату.</p>
+        </div>
+      </div>
+      <button type="button" onclick="openBooking()" class="btn btn-primary card-cta whitespace-nowrap">Забронировать места</button>
+    </div>
+    <p class="mt-6 text-center text-sm text-slate-500">Даты могут дополняться — актуальное расписание всегда в Instagram <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="font-medium text-gold hover:text-leaf">@bayanaulotdyh.kz</a></p>
+  </div>
+</section>
+
+<!-- ================= БЛОК 4: ЧТО ВХОДИТ В ТУР ================= -->
+<section id="about" class="border-t border-line/50 bg-forest py-20 md:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="mx-auto max-w-2xl text-center reveal">
+      <span class="eyebrow">Как всё устроено</span>
+      <h2 class="mt-5 font-display text-3xl font-extrabold text-ink md:text-4xl">Что входит в тур</h2>
+      <p class="mt-4 leading-relaxed text-slate-300">Мы берём всю организацию на себя — вам остаётся собрать рюкзак, зарядить телефон и настроиться на приключение.</p>
+    </div>
+
+    <div class="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      <div class="reveal rounded-3xl border border-line bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40">
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-gold/20 bg-gold/10 text-gold"><svg class="ico h-6 w-6"><use href="#i-bus"/></svg></span>
+        <h3 class="mt-5 font-display text-lg font-bold text-ink">Трансфер</h3>
+        <p class="mt-2 text-sm leading-relaxed">Организованный сбор в г. Павлодар и доставка до всех локаций на комфортном транспорте.</p>
+      </div>
+      <div class="reveal rounded-3xl border border-line bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40" style="transition-delay:.08s">
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-gold/20 bg-gold/10 text-gold"><svg class="ico h-6 w-6"><use href="#i-compass"/></svg></span>
+        <h3 class="mt-5 font-display text-lg font-bold text-ink">Проводники</h3>
+        <p class="mt-2 text-sm leading-relaxed">Опытные гиды, которые знают каждый камень Баянаула и расскажут легенды этого края.</p>
+      </div>
+      <div class="reveal rounded-3xl border border-line bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40" style="transition-delay:.16s">
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-grass/20 bg-grass/10 text-grass"><svg class="ico h-6 w-6"><use href="#i-shield"/></svg></span>
+        <h3 class="mt-5 font-display text-lg font-bold text-ink">Безопасность и забота</h3>
+        <p class="mt-2 text-sm leading-relaxed">Инструктажи перед выходом на маршрут, помощь в пути и продуманный тайминг дня.</p>
+      </div>
+      <div class="reveal rounded-3xl border border-line bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand/40" style="transition-delay:.24s">
+        <span class="flex h-12 w-12 items-center justify-center rounded-2xl border border-grass/20 bg-grass/10 text-grass"><svg class="ico h-6 w-6"><use href="#i-card"/></svg></span>
+        <h3 class="mt-5 font-display text-lg font-bold text-ink">Доступность</h3>
+        <p class="mt-2 text-sm leading-relaxed">Быстрая и удобная оплата через Kaspi QR / Red прямо со смартфона.</p>
+      </div>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-5">
+      <div class="rounded-3xl border border-line bg-card p-7 md:p-9 lg:col-span-3 reveal">
+        <h3 class="flex items-center gap-3 font-display text-xl font-bold text-ink">
+          <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-water/10 text-lake"><svg class="ico h-5 w-5"><use href="#i-route"/></svg></span>
+          Как проходит тур
+        </h3>
+        <div class="relative mt-8">
+          <div class="absolute bottom-3 left-[19px] top-3 w-px bg-line" aria-hidden="true"></div>
+          <ol class="space-y-7">
+            <li class="relative flex gap-4">
+              <span class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-water/50 bg-card font-display text-sm font-bold text-lake">1</span>
+              <div class="pt-1.5"><p class="font-semibold text-ink">Заявка и бронь</p><p class="mt-1 text-sm leading-relaxed">Пишете нам в WhatsApp, выбираете дату — мы закрепляем за вами места.</p></div>
+            </li>
+            <li class="relative flex gap-4">
+              <span class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-water/50 bg-card font-display text-sm font-bold text-lake">2</span>
+              <div class="pt-1.5"><p class="font-semibold text-ink">Оплата Kaspi Red / QR</p><p class="mt-1 text-sm leading-relaxed">Вносите оплату со смартфона за минуту — место в группе ваше.</p></div>
+            </li>
+            <li class="relative flex gap-4">
+              <span class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-water/50 bg-card font-display text-sm font-bold text-lake">3</span>
+              <div class="pt-1.5"><p class="font-semibold text-ink">Сбор в Павлодаре</p><p class="mt-1 text-sm leading-relaxed">Рано утром встречаемся в условленном месте и выезжаем в сторону Баянаула.</p></div>
+            </li>
+            <li class="relative flex gap-4">
+              <span class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-water/50 bg-card font-display text-sm font-bold text-lake">4</span>
+              <div class="pt-1.5"><p class="font-semibold text-ink">Маршрут с гидом</p><p class="mt-1 text-sm leading-relaxed">Локации, легенды, смотровые площадки, привалы и фото — тайминг продуман заранее.</p></div>
+            </li>
+            <li class="relative flex gap-4">
+              <span class="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-water/50 bg-card font-display text-sm font-bold text-lake">5</span>
+              <div class="pt-1.5"><p class="font-semibold text-ink">Возвращение вечером</p><p class="mt-1 text-sm leading-relaxed">Возвращаемся в Павлодар — уставшие, но абсолютно счастливые.</p></div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="rounded-3xl border border-line bg-card p-7 md:p-9 lg:col-span-2 reveal" style="transition-delay:.1s">
+        <h3 class="flex items-center gap-3 font-display text-xl font-bold text-ink">
+          <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-grass/10 text-grass"><svg class="ico h-5 w-5"><use href="#i-pack"/></svg></span>
+          Что взять с собой
+        </h3>
+        <ul class="mt-8 space-y-4">
+          <li class="flex items-center gap-3"><span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-grass/15 text-grass"><svg class="ico h-3.5 w-3.5"><use href="#i-check"/></svg></span><span class="text-slate-300">Удобная трекинговая обувь</span></li>
+          <li class="flex items-center gap-3"><span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-grass/15 text-grass"><svg class="ico h-3.5 w-3.5"><use href="#i-check"/></svg></span><span class="text-slate-300">Одежда по погоде — лучше слоями</span></li>
+          <li class="flex items-center gap-3"><span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-grass/15 text-grass"><svg class="ico h-3.5 w-3.5"><use href="#i-check"/></svg></span><span class="text-slate-300">Вода и лёгкий перекус</span></li>
+          <li class="flex items-center gap-3"><span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-grass/15 text-grass"><svg class="ico h-3.5 w-3.5"><use href="#i-check"/></svg></span><span class="text-slate-300">Небольшой рюкзак (20–30 л)</span></li>
+          <li class="flex items-center gap-3"><span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-grass/15 text-grass"><svg class="ico h-3.5 w-3.5"><use href="#i-check"/></svg></span><span class="text-slate-300">Заряженный телефон и пауэрбанк</span></li>
+          <li class="flex items-center gap-3"><span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-grass/15 text-grass"><svg class="ico h-3.5 w-3.5"><use href="#i-check"/></svg></span><span class="text-slate-300">Хорошее настроение 😄</span></li>
+        </ul>
+        <div class="mt-8 flex items-start gap-3 rounded-2xl border border-line bg-night/50 p-4 text-sm leading-relaxed">
+          <svg class="ico-f mt-0.5 h-5 w-5 shrink-0 text-grass"><use href="#i-wa"/></svg>
+          <span>Полный список снаряжения и рекомендации пришлём в WhatsApp при бронировании.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= БЛОК 5: ФОТО ИЗ ПОЕЗДОК / INSTAGRAM ================= -->
+<section id="gallery" class="py-20 md:py-28">
+  <div class="mx-auto max-w-5xl px-4 sm:px-6">
+    <div class="relative overflow-hidden rounded-[2rem] border border-line bg-gradient-to-br from-forest/80 via-card to-night p-8 text-center md:p-14 reveal">
+      <div class="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-grass/20 blur-3xl" aria-hidden="true"></div>
+      <div class="relative">
+        <span class="eyebrow">Как это было</span>
+        <h2 class="mx-auto mt-5 max-w-2xl font-display text-3xl font-extrabold text-ink md:text-4xl">Места, эмоции и новые друзья</h2>
+        <p class="mx-auto mt-4 max-w-xl leading-relaxed">Все маршруты, фото и живые видео из поездок — в нашем Instagram. Посмотрите, как проходят туры, и почувствуйте атмосферу Баянаула.</p>
+
+        <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <span class="chip chip-green"><svg class="ico-f h-3.5 w-3.5"><use href="#i-ig"/></svg>600+ публикации</span>
+          <span class="chip chip-amber"><svg class="ico h-3.5 w-3.5"><use href="#i-users"/></svg>23 800+ подписчиков</span>
+        </div>
+
+        <div class="mt-8 flex flex-col items-center gap-3">
+          <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="btn btn-primary btn-wrap w-full sm:w-auto">
+            <svg class="ico-f h-5 w-5 shrink-0"><use href="#i-ig"/></svg>Смотреть поездки в Instagram
+          </a>
+          <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="break-all text-sm font-medium text-gold transition-colors hover:text-leaf">@bayanaulotdyh.kz</a>
+        </div>
+        <p class="mt-4 text-sm text-slate-400">Актуальное расписание и свободные даты — тоже там 📅</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= БЛОК 6: ОТЗЫВЫ (пузыри, вертикальные ленты) ================= -->
+<style>
+  #reviews{overflow:hidden}
+  #reviews .stars-anim .st{width:1.6rem;height:1.6rem}
+  .bubbles-wrap{
+    position:relative;
+    height:620px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.5rem;
+    max-width:980px;
+    margin-inline:auto;
+    padding:0 .5rem;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+            mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+  }
+  .bubbles-col{position:relative;overflow:hidden}
+  .bubbles-track{
+    display:flex;flex-direction:column;align-items:center;
+    gap:1.25rem;
+    will-change:transform;
+    animation:bubScroll 36s linear infinite;
+  }
+  .bubbles-col:nth-child(2) .bubbles-track{animation-duration:44s;animation-delay:-11s}
+  .bubbles-col:nth-child(3) .bubbles-track{animation-duration:40s;animation-delay:-22s}
+  .bubbles-wrap:hover .bubbles-track{animation-play-state:paused}
+  .bubbles-track img{
+    width:auto;height:auto;max-width:100%;
+    border-radius:25px;
+    box-shadow:0 6px 18px -6px rgba(0,0,0,.45);
+  }
+  @keyframes bubScroll{
+    from{transform:translateY(0)}
+    to{transform:translateY(-50%)}
+  }
+  .bub-cta{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:2.5rem}
+  @media (max-width:767px){
+    .bubbles-wrap{
+      height:540px;
+      grid-template-columns:1fr;
+      max-width:420px;
+    }
+    .bubbles-col:nth-child(2),.bubbles-col:nth-child(3){display:none}
+    .bubbles-track{animation-duration:40s}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .bubbles-track{animation:none;flex-wrap:wrap;justify-content:center}
+    .bubbles-wrap{height:auto;-webkit-mask-image:none;mask-image:none}
+    .bubbles-col{overflow:visible}
+  }
+</style>
+
+<section id="reviews" class="border-y border-line/50 bg-forest py-20 md:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <div class="mx-auto max-w-2xl text-center reveal">
+      <span class="eyebrow">Отзывы</span>
+      <h2 class="mt-5 font-display text-3xl font-extrabold text-ink md:text-4xl">Что говорят туристы</h2>
+      <div class="stars-anim stars flex justify-center gap-1.5 mt-5 text-gold">
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+      </div>
+      <p class="mt-4 leading-relaxed text-slate-300">Живые сообщения от участников наших туров — без прикрас, прямо из переписок.</p>
+    </div>
+
+    <!-- Ленты пузырей: по 3 скрина на колонку, каждая колонка = список ×2 для бесшовного цикла.
+         Замените/добавьте свои файлы r1.webp, r2.webp, ... (можно нечётное количество — просто раскладывайте по очереди) -->
+    <div class="bubbles-wrap mt-12 reveal">
+      <div class="bubbles-col">
+        <div class="bubbles-track">
+          <img src="img/r1.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r4.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r7.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r1.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r4.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r7.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        </div>
+      </div>
+      <div class="bubbles-col">
+        <div class="bubbles-track">
+          <img src="img/r2.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r5.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r8.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r2.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r5.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r8.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        </div>
+      </div>
+      <div class="bubbles-col">
+        <div class="bubbles-track">
+          <img src="img/r3.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r6.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r9.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r3.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r6.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r9.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
+
+    <div class="bub-cta reveal">
+      <a href="https://www.instagram.com/stories/highlights/17952015794734904/" target="_blank" rel="noopener" class="btn btn-outline">
+        <svg class="ico-f h-5 w-5 text-rose-400"><use href="#i-ig"/></svg>Смотреть все отзывы
+      </a>
+      <p class="text-sm text-slate-500">Полная лента отзывов — в хайлайтах нашего профиля</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= БЛОК 7: ЗАХВАТ / КОНТАКТЫ ================= -->
+<section id="contacts" class="py-20 md:py-28">
+  <div class="mx-auto max-w-5xl px-4 sm:px-6">
+    <div class="relative overflow-hidden rounded-[2rem] border border-line bg-gradient-to-br from-card to-night p-8 text-center md:p-14 reveal">
+      <div class="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
+      <div class="relative">
+        <span class="eyebrow">Бронирование</span>
+        <h2 class="mx-auto mt-5 max-w-2xl font-display text-3xl font-extrabold text-ink md:text-4xl">Готов отправиться в новое путешествие?</h2>
+        <p class="mx-auto mt-4 max-w-xl leading-relaxed">Места в группах ограничены — осенние даты разбирают быстро. Напишите нам, и мы подберём удобную дату и ответим на все вопросы.</p>
+
+        <div class="mx-auto mt-8 grid max-w-3xl gap-4 sm:grid-cols-3">
+          <a href="https://wa.me/77769191402?text=Здравствуйте! Хочу забронировать тур в Баянаул 🍂" target="_blank" rel="noopener" class="reveal rounded-2xl border border-grass/30 bg-grass/10 p-5 transition hover:-translate-y-1 hover:bg-grass/15" style="transition-delay:.08s">
+            <svg class="ico-f mx-auto h-8 w-8 text-grass"><use href="#i-wa"/></svg>
+            <p class="mt-3 font-display font-bold text-ink">WhatsApp 1</p>
+            <p class="mt-1 text-sm text-slate-300">+7 776 919 14 02</p>
+          </a>
+          <a href="https://wa.me/77054057414?text=Здравствуйте! Хочу забронировать тур в Баянаул 🍂" target="_blank" rel="noopener" class="reveal rounded-2xl border border-grass/30 bg-grass/10 p-5 transition hover:-translate-y-1 hover:bg-grass/15" style="transition-delay:.16s">
+            <svg class="ico-f mx-auto h-8 w-8 text-grass"><use href="#i-wa"/></svg>
+            <p class="mt-3 font-display font-bold text-ink">WhatsApp 2</p>
+            <p class="mt-1 text-sm text-slate-300">+7 705 405 74 14</p>
+          </a>
+          <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="reveal rounded-2xl border border-rose-500/30 bg-rose-500/10 p-5 transition hover:-translate-y-1 hover:bg-rose-500/15" style="transition-delay:.24s">
+            <svg class="ico-f mx-auto h-8 w-8 text-rose-400"><use href="#i-ig"/></svg>
+            <p class="mt-3 font-display font-bold text-ink">Instagram</p>
+            <p class="mt-1 text-sm text-slate-300">@bayanaulotdyh.kz</p>
+          </a>
+        </div>
+
+        <p class="mt-8 inline-flex items-center gap-2 text-sm text-slate-400">
+          <svg class="ico h-4 w-4 text-gold"><use href="#i-pin"/></svg>Место сбора: г. Павлодар · выезд утром
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ================= ПОДВАЛ ================= -->
+<footer class="border-t border-line bg-[#04080B]">
+  <div class="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <a href="#hero" class="flex items-center gap-3">
+        <img src="img/logo.webp" alt="Логотип Баянаул Отдых" class="h-10 w-10 rounded-full object-cover ring-1 ring-white/15"
+             onerror="this.style.display='none';document.getElementById('logoFallbackFooter').style.display='flex'">
+        <span id="logoFallbackFooter" style="display:none" class="h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-gold to-brand">
+          <svg class="h-6 w-6 text-night" style="fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round"><use href="#i-mtn"/></svg>
+        </span>
+        <span class="leading-tight">
+          <span class="block font-display font-bold text-ink">Баянаул Отдых</span>
+          <span class="block text-xs text-slate-400">@bayanaulotdyh.kz</span>
+        </span>
+      </a>
+      <p class="mt-5 text-sm leading-relaxed">🌿 Путешествия и туры, в которых уже всё продумано. Места, эмоции и новые друзья.</p>
+      <div class="mt-5 flex gap-3">
+        <a href="https://wa.me/77769191402" target="_blank" rel="noopener" class="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-grass transition hover:border-grass/50" aria-label="WhatsApp">
+          <svg class="ico-f h-5 w-5"><use href="#i-wa"/></svg>
+        </a>
+        <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="flex h-10 w-10 items-center justify-center rounded-xl border border-line text-rose-400 transition hover:border-rose-400/50" aria-label="Instagram">
+          <svg class="ico-f h-5 w-5"><use href="#i-ig"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <nav aria-label="Навигация в подвале">
+      <h3 class="font-display text-sm font-bold uppercase tracking-widest text-ink">Навигация</h3>
+      <ul class="mt-5 space-y-3 text-sm">
+        <li><a href="#afisha" class="transition-colors hover:text-leaf">Афиша туров</a></li>
+        <li><a href="#about" class="transition-colors hover:text-leaf">Как всё устроено</a></li>
+        <li><a href="#gallery" class="transition-colors hover:text-leaf">Фото</a></li>
+        <li><a href="#reviews" class="transition-colors hover:text-leaf">Отзывы</a></li>
+        <li><a href="#contacts" class="transition-colors hover:text-leaf">Контакты</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <h3 class="font-display text-sm font-bold uppercase tracking-widest text-ink">Популярные локации</h3>
+      <ul class="mt-5 space-y-3 text-sm">
+        <li><a href="#afisha" class="transition-colors hover:text-leaf">Пещера Коныр Аулие</a></li>
+        <li><a href="#afisha" class="transition-colors hover:text-leaf">Озеро Жасыбай</a></li>
+        <li><a href="#afisha" class="transition-colors hover:text-leaf">Озеро Сабындыколь</a></li>
+        <li><a href="#afisha" class="transition-colors hover:text-leaf">Пик Смелых</a></li>
+        <li><a href="#afisha" class="transition-colors hover:text-leaf">Карьер с кристаллами</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="font-display text-sm font-bold uppercase tracking-widest text-ink">Контакты</h3>
+      <ul class="mt-5 space-y-3 text-sm">
+        <li>
+          <a href="https://wa.me/77769191402" target="_blank" rel="noopener" class="flex items-center gap-2.5 transition-colors hover:text-leaf">
+            <svg class="ico-f h-4 w-4 shrink-0 text-grass"><use href="#i-wa"/></svg>+7 776 919 14 02
+          </a>
+        </li>
+        <li>
+          <a href="https://wa.me/77054057414" target="_blank" rel="noopener" class="flex items-center gap-2.5 transition-colors hover:text-leaf">
+            <svg class="ico-f h-4 w-4 shrink-0 text-grass"><use href="#i-wa"/></svg>+7 705 405 74 14
+          </a>
+        </li>
+        <li>
+          <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="flex items-center gap-2.5 transition-colors hover:text-leaf">
+            <svg class="ico-f h-4 w-4 shrink-0 text-rose-400"><use href="#i-ig"/></svg>@bayanaulotdyh.kz
+          </a>
+        </li>
+        <li class="flex items-center gap-2.5">
+          <svg class="ico h-4 w-4 shrink-0 text-gold"><use href="#i-pin"/></svg>Место сбора: г. Павлодар
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-line">
+    <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-6 text-center text-sm text-slate-500 sm:flex-row sm:px-6 sm:text-left">
+      <p>© 2026 Туры в Баянаул из Павлодара. Все права защищены.</p>
+      <p>Актуальные туры — <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="text-slate-400 transition-colors hover:text-leaf">@bayanaulotdyh.kz</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- Плавающая кнопка WhatsApp (с пульсацией) -->
+<a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener"
+   class="fab-wa pulse-wa" aria-label="Написать в WhatsApp">
+  <svg class="ico-f h-7 w-7"><use href="#i-wa"/></svg>
+</a>
+
+<!-- Модальное окно бронирования -->
+<div id="modal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Бронирование мест">
+  <div class="absolute inset-0 bg-night/80 backdrop-blur-sm" data-modal-backdrop></div>
+  <div class="relative w-full max-w-md rounded-3xl border border-line bg-card p-7 shadow-2xl sm:p-8">
+    <button type="button" onclick="closeBooking()" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-xl border border-line text-slate-400 transition hover:text-ink" aria-label="Закрыть">
+      <svg class="ico h-5 w-5"><use href="#i-x"/></svg>
+    </button>
+    <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-grass/15 text-grass">
+      <svg class="ico-f h-8 w-8"><use href="#i-wa"/></svg>
+    </div>
+    <h3 class="mt-5 text-center font-display text-2xl font-extrabold text-ink">Бронирование мест</h3>
+    <p id="modalTour" class="mt-2 text-center text-sm font-semibold text-gold"></p>
+    <p class="mt-3 text-center text-sm leading-relaxed">Выберите удобный мессенджер — подскажем свободные даты и закрепим за вами места:</p>
+    <div class="mt-6 space-y-3">
+      <a id="modalWa1" href="#" target="_blank" rel="noopener" class="btn btn-wa btn-sm btn-wrap w-full"><svg class="ico-f h-5 w-5 shrink-0"><use href="#i-wa"/></svg>WhatsApp 1 · +7 776 919 14 02</a>
+      <a id="modalWa2" href="#" target="_blank" rel="noopener" class="btn btn-outline btn-sm btn-wrap w-full"><svg class="ico-f h-5 w-5 shrink-0"><use href="#i-wa"/></svg>WhatsApp 2 · +7 705 405 74 14</a>
+      <a href="https://www.instagram.com/bayanaulotdyh.kz" target="_blank" rel="noopener" class="btn btn-outline btn-sm btn-wrap w-full"><svg class="ico-f h-5 w-5 text-rose-400 shrink-0"><use href="#i-ig"/></svg>Instagram · @bayanaulotdyh.kz</a>
+    </div>
+  </div>
+</div>
+
+<script>
+document.documentElement.classList.add('js');
+
+/* Шапка при скролле */
+const navbar = document.getElementById('navbar');
+const onScroll = () => navbar.classList.toggle('nav-scrolled', window.scrollY > 24);
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll();
+
+/* Мобильное меню */
+const mobileMenu = document.getElementById('mobileMenu');
+function openMenu() {
+  mobileMenu.classList.remove('hidden');
+  mobileMenu.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  mobileMenu.classList.add('hidden');
+  mobileMenu.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+document.getElementById('burger').addEventListener('click', openMenu);
+document.getElementById('menuClose').addEventListener('click', closeMenu);
+document.querySelectorAll('[data-close-menu]').forEach(el => el.addEventListener('click', closeMenu));
+
+/* Вкладки расписания: Сентябрь / Октябрь */
+const tabs = document.querySelectorAll('.tab-btn');
+const panels = { sep: document.getElementById('month-sep'), oct: document.getElementById('month-oct') };
+function setMonth(key) {
+  tabs.forEach(t => {
+    const active = t.dataset.month === key;
+    t.classList.toggle('tab-active', active);
+    t.setAttribute('aria-selected', active);
+  });
+  Object.entries(panels).forEach(([k, p]) => {
+    const show = k === key;
+    p.classList.toggle('hidden', !show);
+    if (show) { p.classList.remove('anim'); void p.offsetWidth; p.classList.add('anim'); }
+  });
+}
+tabs.forEach(t => t.addEventListener('click', () => setMonth(t.dataset.month)));
+setMonth('sep');
+
+/* Аккордеоны программ туров */
+document.querySelectorAll('.acc-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const acc = btn.closest('.acc');
+    acc.classList.toggle('open');
+    btn.setAttribute('aria-expanded', acc.classList.contains('open'));
+  });
+});
+
+/* Модальное окно бронирования -> WhatsApp */
+const modal = document.getElementById('modal');
+const modalTour = document.getElementById('modalTour');
+const WA1 = '77769191402', WA2 = '77054057414';
+function openBooking(tour) {
+  modalTour.textContent = tour || 'Свободная дата / вопрос по турам';
+  const text = tour
+    ? 'Здравствуйте! Хочу забронировать места: ' + tour + '. Подскажите, пожалуйста, есть ли свободные места?'
+    : 'Здравствуйте! Интересуют туры в Баянаул из Павлодара. Подскажите, пожалуйста, свободные даты 🍂';
+  document.getElementById('modalWa1').href = 'https://wa.me/' + WA1 + '?text=' + encodeURIComponent(text);
+  document.getElementById('modalWa2').href = 'https://wa.me/' + WA2 + '?text=' + encodeURIComponent(text);
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+function closeBooking() {
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+modal.querySelector('[data-modal-backdrop]').addEventListener('click', closeBooking);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeBooking(); closeMenu(); } });
+
+/* ===== Scroll-анимации ===== */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    en.target.classList.add('in');
+    io.unobserve(en.target);
+  });
+}, { threshold: .15, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal, .bullet, .cta-anim, .stat, .stars').forEach(el => io.observe(el));
+
+/* Анимация счётчиков */
+const cio = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (!en.isIntersecting) return;
+    cio.unobserve(en.target);
+    const el = en.target;
+    const end = parseInt(el.dataset.count, 10);
+    const suffix = el.dataset.suffix || '';
+    const dur = 1500, t0 = performance.now();
+    const fmt = n => n.toLocaleString('ru-RU');
+    const step = now => {
+      const p = Math.min(1, (now - t0) / dur);
+      el.textContent = fmt(Math.round(end * (1 - Math.pow(1 - p, 3)))) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  });
+}, { threshold: .5 });
+document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
+</script>
+
+<!-- Типографика: предлоги не заканчивают строки (в т.ч. перед тегами), суммы не разрываются -->
+<script>
+(function () {
+  const NBSP = '\u00A0';
+  const SKIP = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEXTAREA', 'CODE', 'PRE', 'BR']);
+  const isEl = n => n && n.nodeType === 1 && !SKIP.has(n.tagName);
+
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      const p = node.parentElement;
+      if (!p || SKIP.has(p.tagName)) return NodeFilter.FILTER_REJECT;
+      const v = node.nodeValue;
+      return (/(^|\s)[а-яё]{1,2}\s/i.test(v) || /\d\s\d/.test(v) || /(^|\s)[а-яё]{1,2}\s$/i.test(v))
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_REJECT;
+    }
+  });
+  const nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+
+  nodes.forEach(n => {
+    let v = n.nodeValue
+      .replace(/(^|\s)([а-яё]{1,2})\s(?=\S)/gi, '$1$2' + NBSP)
+      .replace(/(\d)\s(?=\d{3}\b)/g, '$1' + NBSP)
+      .replace(/(\d)\s(?=₸)/g, '$1' + NBSP);
+    n.nodeValue = v;
+
+    const m = v.match(/(^|\s)([а-яё]{1,2})\s$/);
+    if (m && isEl(n.nextSibling)) {
+      const first = (n.nextSibling.textContent || '').replace(/^\s+/, '');
+      if (first.length > 0 && /[а-яёa-z0-9«]/i.test(first[0])) {
+        n.nodeValue = v.replace(/\s$/, NBSP);
+      }
+    }
+  });
+})();
+</script>
+</body>
+</html>
