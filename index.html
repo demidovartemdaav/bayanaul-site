@@ -74,6 +74,7 @@ tailwind.config = {
   .btn-outline{border:1px solid #334155;background-color:rgba(30,41,59,.55);color:#FDFCFC}
   .btn-outline:hover{border-color:rgba(251,111,10,.6);color:#FDD604;transform:translateY(-2px)}
 
+  /* ===== ФИКС ШАПКИ ДЛЯ МОБИЛЬНЫХ ===== */
   html, body { overflow-x: hidden; }
   .header-cta { display: none !important; }
   @media (min-width: 640px) {
@@ -99,6 +100,7 @@ tailwind.config = {
     55%,100%  {background-position:100% 0, 0 0}
   }
 
+  /* ===== Плавающая кнопка WhatsApp (с пульсацией) ===== */
   .fab-wa{
     position: fixed;
     top: auto;
@@ -136,6 +138,7 @@ tailwind.config = {
 
   .nav-scrolled{background:rgba(6,10,13,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(51,65,85,.7);box-shadow:0 12px 30px -14px rgba(0,0,0,.6)}
 
+  /* ===== Система scroll-анимаций ===== */
   .js .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s ease}
   .js .reveal.in{opacity:1;transform:none}
   .js .bullet{opacity:0;transform:translateX(-22px);transition:opacity .55s ease,transform .55s cubic-bezier(.22,.9,.35,1.1)}
@@ -168,6 +171,7 @@ tailwind.config = {
 
   .star-ico{width:1rem;height:1rem}
 
+  /* ===== Градиентный текст ===== */
   .text-gradient{color:#FB6F0A}
   @supports ((-webkit-background-clip:text) or (background-clip:text)){
     .text-gradient{
@@ -202,6 +206,7 @@ tailwind.config = {
     100%{opacity:0; transform:translate(0,calc(100vh + 60px)) rotate(540deg)}
   }
 
+  /* ===== Десктоп: сцена (прозрачный WebP) + полароид в правой части hero ===== */
   .hero-media{display:none}
   @media (min-width:1280px){
     .hero-media{
@@ -239,6 +244,7 @@ tailwind.config = {
     filter:drop-shadow(0 26px 34px rgba(0,0,0,.55));
   }
 
+  /* ===== Полароид (углы чёткие, 7 кадров WebP) ===== */
   .polaroid{
     position:relative;
     width:100%;
@@ -251,8 +257,8 @@ tailwind.config = {
   }
   .polaroid:hover{transform:rotate(1.8deg)}
   .polaroid .win{
-    --shots: 7;
-    --shot: 3s;
+    --shots: 7;               /* количество кадров */
+    --shot: 3s;               /* время показа одного кадра */
     position:relative; width:100%; aspect-ratio:4/3;
     overflow:hidden; background:#0B1426;
     box-shadow:inset 0 0 0 1px rgba(0,0,0,.12);
@@ -289,6 +295,7 @@ tailwind.config = {
     color:#6B7280; letter-spacing:.02em; transform:rotate(-1.5deg);
   }
 
+  /* ===== Мобильная композиция: сцена за полароидом через ::before ===== */
   .pola-mobile{
     position:relative;
     margin-top:2.5rem;
@@ -314,6 +321,10 @@ tailwind.config = {
     filter:drop-shadow(0 16px 28px rgba(0,0,0,.55)) drop-shadow(0 0 55px rgba(251,111,10,.28));
   }
 
+  /* ===== Мобильный фикс: тап по лентам пузырей не влияет на анимацию ===== */
+  .bubbles-wrap{pointer-events:none}
+  .bubbles-track{touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+
   @media (prefers-reduced-motion:reduce){
     html{scroll-behavior:auto}
     .js .reveal,.js .bullet,.js .cta-anim,.js .stat{opacity:1;transform:none;transition:none}
@@ -334,6 +345,7 @@ tailwind.config = {
 </head>
 <body class="bg-night font-body text-slate-400 antialiased">
 
+<!-- ================= SVG-ИКОНКИ (спрайт) ================= -->
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
@@ -356,6 +368,7 @@ tailwind.config = {
   <symbol id="i-ig" viewBox="0 0 448 512"><path fill="currentColor" stroke="none" d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"/></symbol>
 </svg>
 
+<!-- ================= БЛОК 1: ШАПКА / НАВИГАЦИЯ ================= -->
 <header id="navbar" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
   <div class="mx-auto w-full max-w-7xl px-4 sm:px-6">
     <div class="flex h-16 items-center justify-between gap-2 md:h-20">
@@ -391,6 +404,7 @@ tailwind.config = {
   </div>
 </header>
 
+<!-- Мобильное меню -->
 <div id="mobileMenu" class="fixed inset-0 z-[70] hidden flex-col bg-night/95 backdrop-blur-xl lg:hidden">
   <div class="flex h-16 items-center justify-between px-4 sm:px-6">
     <span class="flex items-center gap-2.5">
@@ -423,6 +437,7 @@ tailwind.config = {
 </div>
 
 <main>
+<!-- ================= БЛОК 2: ГЛАВНЫЙ ЭКРАН ================= -->
 <section id="hero" class="relative flex min-h-[100svh] items-center overflow-hidden">
   <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
@@ -472,6 +487,7 @@ tailwind.config = {
 
   <div class="absolute inset-0 bg-gradient-to-b from-night/80 via-night/40 to-night" aria-hidden="true"></div>
 
+  <!-- ===== Фоновый листопад ===== -->
   <div class="leaves" aria-hidden="true">
     <span class="leaf" style="left:6%;--fd:17s;--dl:0s;--x1:22px;--x2:-18px;--lc:#FDAF03"></span>
     <span class="leaf" style="left:17%;--fd:22s;--dl:4s;--x1:-26px;--x2:20px;--lc:#C96A12"></span>
@@ -486,6 +502,7 @@ tailwind.config = {
 
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
 
+    <!-- ===== Десктоп (от 1280px): сцена + полароид поверх, вписано в контентную колонку ===== -->
     <div class="hero-media" aria-hidden="true">
       <img class="scene-img" src="img/hero-side.webp" alt="" loading="lazy" decoding="async"
            onerror="if(!this.dataset.fb){this.dataset.fb='1';this.src='img/hero-side.png';}else{this.classList.add('hide');}">
@@ -517,6 +534,7 @@ tailwind.config = {
         Однодневные и двухдневные туры выходного дня: горы, озёра Жасыбай и Торайгыр, сакральные места, пещеры и скалы. Места, эмоции и новые друзья 🌿
       </p>
 
+      <!-- буллеты: каскад слева направо -->
       <div class="mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2">
         <div class="bullet flex items-center gap-3.5 rounded-2xl border border-line/70 bg-card/50 px-4 py-3.5 backdrop-blur-sm">
           <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold"><svg class="ico h-5 w-5"><use href="#i-bus"/></svg></span>
@@ -536,6 +554,7 @@ tailwind.config = {
         </div>
       </div>
 
+      <!-- ===== Мобильная композиция (до 1280px): сцена за полароидом через ::before ===== -->
       <div class="pola-mobile xl:hidden">
         <div class="polaroid">
           <div class="win">
@@ -551,6 +570,7 @@ tailwind.config = {
         </div>
       </div>
 
+      <!-- кнопки hero -->
       <div class="mt-10 flex flex-wrap gap-4">
         <a href="#afisha" class="btn btn-primary cta-anim">Смотреть афишу туров<svg class="ico h-5 w-5"><use href="#i-arrow"/></svg></a>
         <a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener" class="btn btn-outline cta-anim" style="transition-delay:.12s">
@@ -565,6 +585,7 @@ tailwind.config = {
   </a>
 </section>
 
+<!-- Полоса доверия -->
 <div class="border-y border-line/60 bg-card/40">
   <div class="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-9 text-center sm:px-6 md:grid-cols-4">
     <div class="stat">
@@ -586,6 +607,7 @@ tailwind.config = {
   </div>
 </div>
 
+<!-- ================= БЛОК 3: АФИША И РАСПИСАНИЕ ================= -->
 <section id="afisha" class="py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
@@ -601,6 +623,7 @@ tailwind.config = {
       </div>
     </div>
 
+    <!-- Сентябрь -->
     <div id="month-sep">
       <div class="mt-10 grid gap-6 lg:grid-cols-2">
 
@@ -678,6 +701,7 @@ tailwind.config = {
       </div>
     </div>
 
+    <!-- Октябрь -->
     <div id="month-oct" class="hidden">
       <div class="mt-10 grid gap-6 lg:grid-cols-2">
 
@@ -761,6 +785,7 @@ tailwind.config = {
       </div>
     </div>
 
+    <!-- Элемент срочности -->
     <div class="mt-10 flex flex-col justify-between gap-6 rounded-3xl border border-brand/30 bg-gradient-to-r from-brand/15 via-brand/5 to-transparent p-6 md:flex-row md:items-center md:p-8 reveal">
       <div class="flex items-start gap-4">
         <span class="text-4xl">🍁</span>
@@ -775,6 +800,7 @@ tailwind.config = {
   </div>
 </section>
 
+<!-- ================= БЛОК 4: ЧТО ВХОДИТ В ТУР ================= -->
 <section id="about" class="border-t border-line/50 bg-forest py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
@@ -861,6 +887,7 @@ tailwind.config = {
   </div>
 </section>
 
+<!-- ================= БЛОК 5: ФОТО ИЗ ПОЕЗДОК / INSTAGRAM ================= -->
 <section id="gallery" class="py-20 md:py-28">
   <div class="mx-auto max-w-5xl px-4 sm:px-6">
     <div class="relative overflow-hidden rounded-[2rem] border border-line bg-gradient-to-br from-forest/80 via-card to-night p-8 text-center md:p-14 reveal">
@@ -887,6 +914,7 @@ tailwind.config = {
   </div>
 </section>
 
+<!-- ================= БЛОК 6: ОТЗЫВЫ (пузыри, вертикальные ленты) ================= -->
 <style>
   #reviews{overflow:hidden}
   #reviews .stars-anim .st{width:1.6rem;height:1.6rem}
@@ -955,6 +983,7 @@ tailwind.config = {
       <p class="mt-4 leading-relaxed text-slate-300">Живые сообщения от участников наших туров — без прикрас, прямо из переписок.</p>
     </div>
 
+    <!-- Ленты пузырей: список ×2 = бесшовный цикл. r1…r9; при 18 файлах расширьте списки (r10…r18) -->
     <div class="bubbles-wrap mt-12 reveal">
       <div class="bubbles-col">
         <div class="bubbles-track">
@@ -997,6 +1026,7 @@ tailwind.config = {
   </div>
 </section>
 
+<!-- ================= БЛОК 7: ЗАХВАТ / КОНТАКТЫ ================= -->
 <section id="contacts" class="py-20 md:py-28">
   <div class="mx-auto max-w-5xl px-4 sm:px-6">
     <div class="relative overflow-hidden rounded-[2rem] border border-line bg-gradient-to-br from-card to-night p-8 text-center md:p-14 reveal">
@@ -1033,6 +1063,7 @@ tailwind.config = {
 </section>
 </main>
 
+<!-- ================= ПОДВАЛ ================= -->
 <footer class="border-t border-line bg-[#04080B]">
   <div class="mx-auto grid max-w-7xl gap-12 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
     <div>
@@ -1112,11 +1143,13 @@ tailwind.config = {
   </div>
 </footer>
 
+<!-- Плавающая кнопка WhatsApp (с пульсацией) -->
 <a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener"
    class="fab-wa pulse-wa" aria-label="Написать в WhatsApp">
   <svg class="ico-f h-7 w-7"><use href="#i-wa"/></svg>
 </a>
 
+<!-- Модальное окно бронирования -->
 <div id="modal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Бронирование мест">
   <div class="absolute inset-0 bg-night/80 backdrop-blur-sm" data-modal-backdrop></div>
   <div class="relative w-full max-w-md rounded-3xl border border-line bg-card p-7 shadow-2xl sm:p-8">
@@ -1140,11 +1173,13 @@ tailwind.config = {
 <script>
 document.documentElement.classList.add('js');
 
+/* Шапка при скролле */
 const navbar = document.getElementById('navbar');
 const onScroll = () => navbar.classList.toggle('nav-scrolled', window.scrollY > 24);
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
+/* Мобильное меню */
 const mobileMenu = document.getElementById('mobileMenu');
 function openMenu() {
   mobileMenu.classList.remove('hidden');
@@ -1160,6 +1195,7 @@ document.getElementById('burger').addEventListener('click', openMenu);
 document.getElementById('menuClose').addEventListener('click', closeMenu);
 document.querySelectorAll('[data-close-menu]').forEach(el => el.addEventListener('click', closeMenu));
 
+/* Вкладки расписания: Сентябрь / Октябрь */
 const tabs = document.querySelectorAll('.tab-btn');
 const panels = { sep: document.getElementById('month-sep'), oct: document.getElementById('month-oct') };
 function setMonth(key) {
@@ -1177,6 +1213,7 @@ function setMonth(key) {
 tabs.forEach(t => t.addEventListener('click', () => setMonth(t.dataset.month)));
 setMonth('sep');
 
+/* Аккордеоны программ туров */
 document.querySelectorAll('.acc-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const acc = btn.closest('.acc');
@@ -1185,6 +1222,7 @@ document.querySelectorAll('.acc-toggle').forEach(btn => {
   });
 });
 
+/* Модальное окно бронирования -> WhatsApp */
 const modal = document.getElementById('modal');
 const modalTour = document.getElementById('modalTour');
 const WA1 = '77769191402', WA2 = '77054057414';
@@ -1207,6 +1245,7 @@ function closeBooking() {
 modal.querySelector('[data-modal-backdrop]').addEventListener('click', closeBooking);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeBooking(); closeMenu(); } });
 
+/* ===== Scroll-анимации ===== */
 const io = new IntersectionObserver(entries => {
   entries.forEach(en => {
     if (!en.isIntersecting) return;
@@ -1217,6 +1256,7 @@ const io = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal, .bullet, .cta-anim, .stat, .stars').forEach(el => io.observe(el));
 
+/* Анимация счётчиков */
 const cio = new IntersectionObserver(entries => {
   entries.forEach(en => {
     if (!en.isIntersecting) return;
@@ -1237,6 +1277,7 @@ const cio = new IntersectionObserver(entries => {
 document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
 </script>
 
+<!-- Типографика: предлоги не заканчивают строки (в т.ч. перед тегами), суммы не разрываются -->
 <script>
 (function () {
   const NBSP = '\u00A0';
