@@ -971,7 +971,7 @@ tailwind.config = {
     margin-inline:auto;
     padding:0 .5rem;
     -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);
-            mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+    mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);
   }
   .bubbles-col{position:relative;overflow:hidden}
   .bubbles-track{
@@ -982,26 +982,42 @@ tailwind.config = {
   }
   .bubbles-col:nth-child(2) .bubbles-track{animation-duration:44s;animation-delay:-11s}
   .bubbles-col:nth-child(3) .bubbles-track{animation-duration:40s;animation-delay:-22s}
-  .bubbles-wrap:hover .bubbles-track{animation-play-state:paused}
+
+  /* Пауза при наведении — только для устройств с настоящей мышью.
+     На тач-устройствах :hover «залипает» после тапа, поэтому там правило не действует. */
+  @media (hover:hover) and (pointer:fine){
+    .bubbles-wrap:hover .bubbles-track{animation-play-state:paused}
+  }
+
   .bubbles-track img{
     width:auto;height:auto;max-width:100%;
     border-radius:25px;
     box-shadow:0 6px 18px -6px rgba(0,0,0,.45);
+    pointer-events:none;          /* картинки не перехватывают тапы и hover */
+    -webkit-touch-callout:none;   /* без системного меню «сохранить изображение» на iOS */
+    -webkit-user-select:none;
+    user-select:none;
   }
   @keyframes bubScroll{
     from{transform:translateY(0)}
     to{transform:translateY(-50%)}
   }
   .bub-cta{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:2.5rem}
+
   @media (max-width:767px){
     .bubbles-wrap{
       height:540px;
       grid-template-columns:1fr;
       max-width:420px;
+      touch-action:pan-y;  /* вертикальный скролл страницы по пузырям работает */
     }
     .bubbles-col:nth-child(2),.bubbles-col:nth-child(3){display:none}
-    .bubbles-track{animation-duration:40s}
+    .bubbles-track{
+      animation-duration:40s;
+      animation-play-state:running !important; /* страховка: лента не останавливается на тач-устройствах */
+    }
   }
+
   @media (prefers-reduced-motion:reduce){
     .bubbles-track{animation:none;flex-wrap:wrap;justify-content:center}
     .bubbles-wrap{height:auto;-webkit-mask-image:none;mask-image:none}
@@ -1067,7 +1083,6 @@ tailwind.config = {
     </div>
   </div>
 </section>
-
 <!-- ================= БЛОК 7: ЗАХВАТ / КОНТАКТЫ ================= -->
 <section id="contacts" class="py-20 md:py-28">
   <div class="mx-auto max-w-5xl px-4 sm:px-6">
