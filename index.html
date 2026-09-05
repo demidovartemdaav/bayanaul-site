@@ -170,17 +170,42 @@ tailwind.config = {
   @keyframes statPulse{0%{transform:scale(1)}45%{transform:scale(1.14)}100%{transform:scale(1)}}
 
   .star-ico{width:1rem;height:1rem}
-
-  /* ===== Градиентный текст ===== */
-  .text-gradient{color:#FB6F0A}
-  @supports ((-webkit-background-clip:text) or (background-clip:text)){
-    .text-gradient{
-      background:linear-gradient(92deg,#FDD604 0%,#FDAF03 55%,#FB6F0A 100%);
-      -webkit-background-clip:text;
-      background-clip:text;
-      -webkit-text-fill-color:transparent;
-      color:transparent;
-    }
+    /* ===== Фоновый листопад на hero ===== */
+  .leaves{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+  .leaf{
+    position:absolute;
+    top:-6%;
+    opacity:0;
+    width:clamp(10px,1.3vw,16px);
+    height:clamp(12px,1.5vw,19px);
+    background:var(--lc,#FDAF03);
+    border-radius:80% 0 80% 0;
+    animation:
+      leafFall var(--fd,14s) linear var(--dl,0s) infinite,
+      leafSway 3.4s ease-in-out var(--dl,0s) infinite alternate,
+      leafSpin 6s linear var(--dl,0s) infinite,
+      leafIn 1.2s ease var(--dl,0s) both;
+  }
+    .leaf{
+    position:absolute;
+    top:0;
+    left:0;
+    opacity:0;
+    width:clamp(10px,1.3vw,16px);
+    height:clamp(12px,1.5vw,19px);
+    background:var(--lc,#FDAF03);
+    border-radius:80% 0 80% 0;
+    will-change:transform,opacity;
+    animation:leafFly var(--fd,14s) linear var(--dl,0s) infinite;
+  }
+  @keyframes leafFly{
+    0%  {opacity:0; transform:translate(var(--x0), -60px) rotate(0deg)}
+    8%  {opacity:.75}
+    25% {transform:translate(var(--x1), 22vh) rotate(140deg)}
+    50% {transform:translate(var(--x2), 48vh) rotate(255deg)}
+    75% {transform:translate(var(--x1), 74vh) rotate(400deg)}
+    92% {opacity:.75}
+    100%{opacity:0; transform:translate(var(--x0), calc(100vh + 60px)) rotate(540deg)}
   }
 
   /* ===== Десктоп: сцена (прозрачный WebP) + полароид в правой части hero ===== */
@@ -505,6 +530,18 @@ tailwind.config = {
        class="absolute inset-0 h-full w-full object-cover transition-opacity duration-700" style="opacity:0">
 
   <div class="absolute inset-0 bg-gradient-to-b from-night/80 via-night/40 to-night" aria-hidden="true"></div>
+  <div class="leaves" aria-hidden="true">
+<span class="leaf" style="left:6%;--fd:17s;--dl:0s;--x0:0px;--x1:22px;--x2:-18px;--lc:#FDAF03"></span>
+<span class="leaf" style="left:17%;--fd:22s;--dl:4s;--x0:0px;--x1:-26px;--x2:20px;--lc:#C96A12"></span>
+<span class="leaf" style="left:29%;--fd:15s;--dl:9s;--x0:0px;--x1:18px;--x2:24px;--lc:#FB6F0A"></span>
+<span class="leaf" style="left:41%;--fd:25s;--dl:2s;--x0:0px;--x1:-20px;--x2:-28px;--lc:#FDAF03"></span>
+<span class="leaf" style="left:52%;--fd:19s;--dl:12s;--x0:0px;--x1:24px;--x2:-16px;--lc:#C96A12"></span>
+<span class="leaf" style="left:63%;--fd:14s;--dl:6s;--x0:0px;--x1:-18px;--x2:22px;--lc:#FDD604"></span>
+<span class="leaf" style="left:74%;--fd:23s;--dl:15s;--x0:0px;--x1:26px;--x2:-20px;--lc:#FB6F0A"></span>
+<span class="leaf" style="left:84%;--fd:16s;--dl:8s;--x0:0px;--x1:-22px;--x2:26px;--lc:#FDAF03"></span>
+<span class="leaf" style="left:93%;--fd:20s;--dl:11s;--x0:0px;--x1:20px;--x2:18px;--lc:#C96A12"></span>
+</div>
+
 
   <div class="relative z-10 mx-auto w-full max-w-7xl px-4 pb-24 pt-32 sm:px-6">
 
@@ -599,7 +636,7 @@ tailwind.config = {
       <p class="mt-1 text-sm text-slate-400">подписчиков в Instagram</p>
     </div>
     <div class="stat" style="transition-delay:.08s">
-      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span class="stat-num inline-block" data-count="664">664</span></p>
+      <p class="font-display text-3xl font-extrabold text-ink md:text-4xl"><span class="stat-num inline-block" data-count="600" data-suffix="+">600+</span></p>
       <p class="mt-1 text-sm text-slate-400">публикаций о путешествиях</p>
     </div>
     <div class="stat" style="transition-delay:.16s">
@@ -904,7 +941,7 @@ tailwind.config = {
         <p class="mx-auto mt-4 max-w-xl leading-relaxed">Все маршруты, фото и живые видео из поездок — в нашем Instagram. Посмотрите, как проходят туры, и почувствуйте атмосферу Баянаула.</p>
 
         <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
-          <span class="chip chip-green"><svg class="ico-f h-3.5 w-3.5"><use href="#i-ig"/></svg>664 публикации</span>
+          <span class="chip chip-green"><svg class="ico-f h-3.5 w-3.5"><use href="#i-ig"/></svg>600+ публикации</span>
           <span class="chip chip-amber"><svg class="ico h-3.5 w-3.5"><use href="#i-users"/></svg>23 800+ подписчиков</span>
         </div>
 
@@ -920,81 +957,113 @@ tailwind.config = {
   </div>
 </section>
 
-<!-- ================= БЛОК 6: ОТЗЫВЫ ================= -->
+<!-- ================= БЛОК 6: ОТЗЫВЫ (пузыри, вертикальные ленты) ================= -->
+<style>
+  #reviews{overflow:hidden}
+  #reviews .stars-anim .st{width:1.6rem;height:1.6rem}
+  .bubbles-wrap{
+    position:relative;
+    height:620px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.5rem;
+    max-width:980px;
+    margin-inline:auto;
+    padding:0 .5rem;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+            mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent 100%);
+  }
+  .bubbles-col{position:relative;overflow:hidden}
+  .bubbles-track{
+    display:flex;flex-direction:column;align-items:center;
+    gap:1.25rem;
+    will-change:transform;
+    animation:bubScroll 36s linear infinite;
+  }
+  .bubbles-col:nth-child(2) .bubbles-track{animation-duration:44s;animation-delay:-11s}
+  .bubbles-col:nth-child(3) .bubbles-track{animation-duration:40s;animation-delay:-22s}
+  .bubbles-wrap:hover .bubbles-track{animation-play-state:paused}
+  .bubbles-track img{
+    width:auto;height:auto;max-width:100%;
+    border-radius:25px;
+    box-shadow:0 6px 18px -6px rgba(0,0,0,.45);
+  }
+  @keyframes bubScroll{
+    from{transform:translateY(0)}
+    to{transform:translateY(-50%)}
+  }
+  .bub-cta{display:flex;flex-direction:column;align-items:center;gap:.75rem;margin-top:2.5rem}
+  @media (max-width:767px){
+    .bubbles-wrap{
+      height:540px;
+      grid-template-columns:1fr;
+      max-width:420px;
+    }
+    .bubbles-col:nth-child(2),.bubbles-col:nth-child(3){display:none}
+    .bubbles-track{animation-duration:40s}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .bubbles-track{animation:none;flex-wrap:wrap;justify-content:center}
+    .bubbles-wrap{height:auto;-webkit-mask-image:none;mask-image:none}
+    .bubbles-col{overflow:visible}
+  }
+</style>
+
 <section id="reviews" class="border-y border-line/50 bg-forest py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
       <span class="eyebrow">Отзывы</span>
       <h2 class="mt-5 font-display text-3xl font-extrabold text-ink md:text-4xl">Что говорят туристы</h2>
-      <p class="mt-4 leading-relaxed text-slate-300">Тёплые слова участников наших туров выходного дня — лучшая мотивация открывать новые маршруты.</p>
+      <div class="stars-anim stars flex justify-center gap-1.5 mt-5 text-gold">
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+        <svg class="star-ico st"><use href="#i-star"/></svg>
+      </div>
+      <p class="mt-4 leading-relaxed text-slate-300">Живые сообщения от участников наших туров — без прикрас, прямо из переписок.</p>
     </div>
 
-    <div class="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-      <div class="reveal rounded-3xl border border-line bg-card p-6">
-        <div class="stars flex gap-1 text-gold">
-          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
-        </div>
-        <p class="mt-4 text-sm leading-relaxed text-slate-300">«Ездили с подругами к озеру Торайгыр и Камню Кольцо. Всё чётко: трансфер, тайминг, гид. Ни о чём не пришлось думать — только любоваться видами и делать фото!»</p>
-        <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
-          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">А</span>
-          <div><p class="font-semibold text-ink">Асель</p><p class="text-xs text-slate-500">участница тура «Классика Баянаула»</p></div>
+    <!-- Ленты пузырей: по 3 скрина на колонку, каждая колонка = список ×2 для бесшовного цикла.
+         Замените/добавьте свои файлы r1.webp, r2.webp, ... (можно нечётное количество — просто раскладывайте по очереди) -->
+    <div class="bubbles-wrap mt-12 reveal">
+      <div class="bubbles-col">
+        <div class="bubbles-track">
+          <img src="img/r1.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r4.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r7.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r1.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r4.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r7.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
         </div>
       </div>
+      <div class="bubbles-col">
+        <div class="bubbles-track">
+          <img src="img/r2.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r5.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r8.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r2.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r5.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r8.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        </div>
+      </div>
+      <div class="bubbles-col">
+        <div class="bubbles-track">
+          <img src="img/r3.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r6.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r9.webp" alt="Отзыв клиента" loading="lazy" decoding="async">
+          <img src="img/r3.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r6.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+          <img src="img/r9.webp" alt="" aria-hidden="true" loading="lazy" decoding="async">
+        </div>
+      </div>
+    </div>
 
-      <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.06s">
-        <div class="stars flex gap-1 text-gold">
-          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
-        </div>
-        <p class="mt-4 text-sm leading-relaxed text-slate-300">«Сложный маршрут: Коныр Аулие, Скала Танк, карьер с кристаллами. Маленькая группа, инструктор всегда рядом и подстраховывал. Подготовленным людям — однозначно советую!»</p>
-        <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
-          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">Д</span>
-          <div><p class="font-semibold text-ink">Дмитрий</p><p class="text-xs text-slate-500">участник тура «Пещеры и скалы»</p></div>
-        </div>
-      </div>
-
-      <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.12s">
-        <div class="stars flex gap-1 text-gold">
-          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
-        </div>
-        <p class="mt-4 text-sm leading-relaxed text-slate-300">«Мой первый поход — и такой душевный! Организация на высоте, компания тёплая, виды нереальные. Уже записалась на следующую дату.»</p>
-        <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
-          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">А</span>
-          <div><p class="font-semibold text-ink">Айгерим</p><p class="text-xs text-slate-500">участница сборного тура</p></div>
-        </div>
-      </div>
-
-      <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.18s">
-        <div class="stars flex gap-1 text-gold">
-          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
-        </div>
-        <p class="mt-4 text-sm leading-relaxed text-slate-300">«Отличный способ провести выходной: собрали в Павлодаре, довезли, провели по маршруту и вернули домой, полным впечатлений. Цена полностью оправдана.»</p>
-        <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
-          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">С</span>
-          <div><p class="font-semibold text-ink">Сергей</p><p class="text-xs text-slate-500">участник тура выходного дня</p></div>
-        </div>
-      </div>
-
-      <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.24s">
-        <div class="stars flex gap-1 text-gold">
-          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
-        </div>
-        <p class="mt-4 text-sm leading-relaxed text-slate-300">«Дочь в восторге от Сабындыколя и „Бабы Яги“! Детский билет — приятный бонус. Спасибо гидам за заботу и тёплую атмосферу.»</p>
-        <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
-          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">Ж</span>
-          <div><p class="font-semibold text-ink">Жанна</p><p class="text-xs text-slate-500">мама юной туристки</p></div>
-        </div>
-      </div>
-
-      <div class="reveal rounded-3xl border border-line bg-card p-6" style="transition-delay:.3s">
-        <div class="stars flex gap-1 text-gold">
-          <svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg><svg class="star-ico st"><use href="#i-star"/></svg>
-        </div>
-        <p class="mt-4 text-sm leading-relaxed text-slate-300">«Ездим уже не первый сезон. Каждый маршрут продуман до мелочей, гиды знают историю каждого камня. Это уже не просто туры — это наша традиция.»</p>
-        <div class="mt-6 flex items-center gap-3 border-t border-line pt-5">
-          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-gold to-brand font-display font-bold text-[#1A0E02]">Е</span>
-          <div><p class="font-semibold text-ink">Ержан</p><p class="text-xs text-slate-500">постоянный участник туров</p></div>
-        </div>
-      </div>
+    <div class="bub-cta reveal">
+      <a href="https://www.instagram.com/stories/highlights/17952015794734904/" target="_blank" rel="noopener" class="btn btn-outline">
+        <svg class="ico-f h-5 w-5 text-rose-400"><use href="#i-ig"/></svg>Смотреть все отзывы
+      </a>
+      <p class="text-sm text-slate-500">Полная лента отзывов — в хайлайтах нашего профиля</p>
     </div>
   </div>
 </section>
