@@ -482,7 +482,7 @@ tailwind.config = {
 
 <main>
 <!-- ================= БЛОК 2: ГЛАВНЫЙ ЭКРАН ================= -->
-<section id="hero" class="relative flex min-h-[100svh] items-center overflow-hidden">
+<section id="hero" data-section="hero" class="relative flex min-h-[100svh] items-center overflow-hidden">
   <svg class="absolute inset-0 h-full w-full" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs>
       <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
@@ -651,7 +651,7 @@ tailwind.config = {
 </div>
 
 <!-- ================= БЛОК 3: АФИША И РАСПИСАНИЕ ================= -->
-<section id="afisha" class="py-20 md:py-28">
+<section id="afisha" data-section="afisha" class="py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
       <span class="eyebrow">Афиша · Сентябрь — Октябрь</span>
@@ -844,7 +844,7 @@ tailwind.config = {
 </section>
 
 <!-- ================= БЛОК 4: ЧТО ВХОДИТ В ТУР ================= -->
-<section id="about" class="border-t border-line/50 bg-forest py-20 md:py-28">
+<section id="about" data-section="about" class="border-t border-line/50 bg-forest py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
       <span class="eyebrow">Как всё устроено</span>
@@ -931,7 +931,7 @@ tailwind.config = {
 </section>
 
 <!-- ================= БЛОК 5: ФОТО ИЗ ПОЕЗДОК / INSTAGRAM ================= -->
-<section id="gallery" class="py-20 md:py-28">
+<section id="gallery" data-section="gallery" class="py-20 md:py-28">
   <div class="mx-auto max-w-5xl px-4 sm:px-6">
     <div class="relative overflow-hidden rounded-[2rem] border border-line bg-gradient-to-br from-forest/80 via-card to-night p-8 text-center md:p-14 reveal">
       <div class="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-grass/20 blur-3xl" aria-hidden="true"></div>
@@ -1025,7 +1025,7 @@ tailwind.config = {
   }
 </style>
 
-<section id="reviews" class="border-y border-line/50 bg-forest py-20 md:py-28">
+<section id="reviews" data-section="reviews" class="border-y border-line/50 bg-forest py-20 md:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6">
     <div class="mx-auto max-w-2xl text-center reveal">
       <span class="eyebrow">Отзывы</span>
@@ -1084,7 +1084,7 @@ tailwind.config = {
   </div>
 </section>
 <!-- ================= БЛОК 7: ЗАХВАТ / КОНТАКТЫ ================= -->
-<section id="contacts" class="py-20 md:py-28">
+<section id="contacts" data-section="contacts" class="py-20 md:py-28">
   <div class="mx-auto max-w-5xl px-4 sm:px-6">
     <div class="relative overflow-hidden rounded-[2rem] border border-line bg-gradient-to-br from-card to-night p-8 text-center md:p-14 reveal">
       <div class="pointer-events-none absolute -top-24 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-brand/20 blur-3xl" aria-hidden="true"></div>
@@ -1199,12 +1199,6 @@ tailwind.config = {
     </div>
   </div>
 </footer>
-
-<!-- Плавающая кнопка WhatsApp (с пульсацией) -->
-<a href="https://wa.me/77769191402?text=Здравствуйте! Интересуют туры в Баянаул из Павлодара 🍂" target="_blank" rel="noopener"
-   class="fab-wa pulse-wa" aria-label="Написать в WhatsApp">
-  <svg class="ico-f h-7 w-7"><use href="#i-wa"/></svg>
-</a>
 
 <!-- Модальное окно бронирования -->
 <div id="modal" class="fixed inset-0 z-[80] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Бронирование мест">
@@ -1370,6 +1364,28 @@ document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
     }
   });
 })();
+</script>
+
+<!-- ===== Рысёнок — котёнок-рысь (виджет) ===== -->
+<script src="cub.js"></script>
+<script>
+    // Подсказки по секциям сайта
+    document.addEventListener('DOMContentLoaded', function() {
+        if (window.cub) {
+            window.cub.setSectionTips({
+                hero: 'Туры в Баянаул из Павлодара — горы, озёра, пещеры. От 15 000 ₸.',
+                afisha: 'Расписание туров на выходные. Бронируйте в WhatsApp!',
+                about: 'В стоимость входят: трансфер, гид, обед. Без ночёвки.',
+                gallery: 'Фотографии с туров — озеро Жасыбай, скалы, пещеры.',
+                reviews: 'Отзывы туристов, которые уже съездили с нами.',
+                contacts: 'Бронирование: +7 776 919 14 02 (WhatsApp) или Kaspi Red.'
+            });
+            // Приветствие через 3 секунды
+            setTimeout(function() {
+                window.cub.say('Привет! Я Рысёнок. Кликни на меня — расскажу про туры!', 'Баянаул', 5000);
+            }, 3000);
+        }
+    });
 </script>
 </body>
 </html>
